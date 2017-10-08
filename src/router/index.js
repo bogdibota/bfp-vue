@@ -25,6 +25,9 @@ export default new Router({
       component: Redirecter,
     },
     {
+      path: '/my-groups',
+      name: 'my-groups',
+      component: MyGroups,
     },
   ],
   mode: 'history',
