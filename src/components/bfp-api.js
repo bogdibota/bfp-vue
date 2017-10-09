@@ -22,12 +22,22 @@ async function call(query) {
 
 // Queries
 
-export const myFriends = async (fieldDescriptions) => call(`query {
-    myFriends(accessToken: "${getAccessToken()}") ${fieldDescriptions}
+export const myFriends = async (excludeGroupId, fieldDescriptions) => {
+  let excludeQuery = '';
+  if (excludeGroupId) {
+    excludeQuery = `, excludeGroupId: "${excludeGroupId}"`;
+  }
+  return call(`query {
+    myFriends(accessToken: "${getAccessToken()}"${excludeQuery}) ${fieldDescriptions}
   }`);
+};
 
 export const myGroups = async (fieldDescriptions) => call(`query {
     myGroups(accessToken: "${getAccessToken()}") ${fieldDescriptions}
+  }`);
+
+export const getGroupById = async (id, fieldDescriptions) => call(`query {
+    groupById(accessToken: "${getAccessToken()}", id: "${id}") ${fieldDescriptions}
   }`);
 
 // Mutations
@@ -43,7 +53,7 @@ export const createGroup = async (name, fieldDescriptions) => call(`mutation {
 export const updateGroup = async (id, name, addUserId, removeUserId, fieldDescriptions) => {
   const argsObj = { name, addUserId, removeUserId };
   const args = Object.keys(argsObj)
-// eslint-disable-next-line no-confusing-arrow
+  // eslint-disable-next-line no-confusing-arrow
     .map((key) => argsObj[key] ? `, ${key}: "${argsObj[key]}"` : null)
     .filter(it => it);
   return call(`mutation {

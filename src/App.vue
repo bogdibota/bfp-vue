@@ -37,6 +37,8 @@
     color: #2c3e50;
     background: oldlace;
     min-height: 100vh;
+    display: flex;
+    flex-direction: column;
     height: 100%;
   }
 

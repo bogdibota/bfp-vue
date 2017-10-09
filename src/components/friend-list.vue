@@ -1,9 +1,9 @@
 <template>
   <div class="friendList">
     <h1>{{ header }}</h1>
-    <div class="asd">
+    <div class="user-list-container">
       <div v-for="item in items">
-        <div class="gg">
+        <div class="user-container">
           <p>{{ item.name }}</p>
           <img :src="item.avatar"/>
         </div>
@@ -15,11 +15,6 @@
 <script>
   export default {
     name: 'friend-list',
-    data() {
-      return {
-        msg: 'Welcome to Your Vue.js App',
-      };
-    },
     props: ['items', 'header'],
   };
 </script>
@@ -30,7 +25,7 @@
     font-size: 18px;
   }
 
-  .asd {
+  .user-list-container {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -41,8 +36,8 @@
     margin: auto;
   }
 
-  .gg {
-    padding: 10px;
+  .user-container {
+    padding: 5px;
     width: 250px;
     display: flex;
     flex-direction: row;
@@ -50,9 +45,12 @@
     justify-content: space-between;
   }
 
+  :last-child > .user-container {
+    border-bottom: 3px solid chocolate;
+  }
+
   img {
     height: 70px;
     border-radius: 50%;
-    float: right;
   }
 </style>

@@ -50,7 +50,7 @@
           }
         });
       bogdiApi
-        .myFriends(`{
+        .myFriends(null, `{
           name
           avatar
         }`)

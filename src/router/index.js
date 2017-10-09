@@ -4,6 +4,7 @@ import MyProfile from '@/components/my-profile';
 import Home from '@/components/Home';
 import Redirecter from '@/components/Redirecter';
 import MyGroups from '@/components/my-groups';
+import Group from '@/components/group';
 
 Vue.use(Router);
 
@@ -28,6 +29,10 @@ export default new Router({
       path: '/my-groups',
       name: 'my-groups',
       component: MyGroups,
+    }, {
+      path: '/my-groups/:id',
+      component: Group,
+
     },
   ],
   mode: 'history',

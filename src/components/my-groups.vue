@@ -16,6 +16,7 @@
     created() {
       bogdiService
         .myGroups(`{
+          id
           name
           users {
             name
