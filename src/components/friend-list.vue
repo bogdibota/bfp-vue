@@ -4,6 +4,7 @@
     <div class="user-list-container">
       <div v-for="item in items">
         <div class="user-container">
+          <button v-if="isGroupView" class="remove" v-on:click="removeMember(item.id)">X</button>
           <p>{{ item.name }}</p>
           <img :src="item.avatar"/>
         </div>
@@ -13,9 +14,23 @@
 </template>
 
 <script>
+  import VueRouter from 'vue-router';
+  import * as api from './bfp-api';
+
+  const router = new VueRouter({ mode: 'history' });
+
   export default {
     name: 'friend-list',
-    props: ['items', 'header'],
+    props: ['items', 'header', 'isGroupView', 'groupId'],
+    methods: {
+      removeMember(friendId) {
+        api.updateGroup(this.groupId, null, null, friendId, '{id}')
+          .then(({ data: { updateGroup: { id } } }) => {
+            router.push(`/my-groups/${id}`);
+            router.go();
+          });
+      },
+    },
   };
 </script>
 
@@ -33,7 +48,7 @@
   }
 
   p {
-    margin: auto;
+    margin: auto 0;
   }
 
   .user-container {
@@ -52,5 +67,17 @@
   img {
     height: 70px;
     border-radius: 50%;
+  }
+
+  .remove {
+    background: red;
+    color: cornsilk;
+    border-radius: 50%;
+    font-size: 15px;
+    font-weight: bolder;
+    height: 35px;
+    width: 35px;
+    border: none;
+    margin: auto 0;
   }
 </style>

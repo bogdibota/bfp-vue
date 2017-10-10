@@ -1,15 +1,15 @@
 <template>
   <div id="addMemberDialog">
     <md-dialog md-open-from="#addButton" md-close-to="#addButton" ref="addDialog">
-      <md-dialog-title>Best dialog</md-dialog-title>
-      <md-dialog-content><input v-model="newMemberName" v-on:keyup="textChanged()"/>
+      <md-dialog-title>Add member</md-dialog-title>
+      <md-dialog-content><input v-model="newMemberName" v-on:keyup="textChanged()"
+                                v-on:keydown.enter="addMember(friendsToDisplay[0].id)"/>
         <div v-for="friend in friendsToDisplay">
-          <div> {{ friend.name }} <img :src="friend.avatar"/></div>
+          <div class="friend" v-on:click="addMember(friend.id)"> <div class="friend-name">{{ friend.name }}</div> <img :src="friend.avatar"/></div>
         </div>
       </md-dialog-content>
       <md-dialog-actions>
         <md-button class="md-primary" @click="closeDialog('addDialog', false)">Cancel</md-button>
-        <md-button class="md-primary" @click="closeDialog('addDialog', true)">Ok</md-button>
       </md-dialog-actions>
     </md-dialog>
     <md-button id="#addButton" class="md-icon-button md-raised add-button" @click="openDialog('addDialog')">
@@ -31,12 +31,13 @@
         friendsToDisplay: [],
       };
     },
-    props: ['groupId', 'friends'],
     created() {
       this.friendsToDisplay = this.friends;
     },
+    props: ['groupId', 'friends'],
     methods: {
       openDialog(ref) {
+        this.textChanged();
         this.$refs[ref].open();
       },
       closeDialog(ref, isOk) {
@@ -45,8 +46,11 @@
           this.sendRequest();
         }
       },
-      sendRequest() {
-        api.updateGroup(this.groupId, null, 1823454117685095, null, '{id}')
+      addMember(friendId) {
+        if (this.friendsToDisplay.length === 0) {
+          return;
+        }
+        api.updateGroup(this.groupId, null, friendId, null, '{id}')
           .then(({ data: { updateGroup: { id } } }) => {
             router.push(`/my-groups/${id}`);
             router.go();
@@ -54,7 +58,9 @@
       },
       textChanged() {
         this.friendsToDisplay = this.friends
-          .filter(({ name }) => name.toLowerCase().indexOf(this.newMemberName.toLowerCase()) > -1);
+          .filter(({ name }) => name.toLowerCase().indexOf(this.newMemberName.toLowerCase()) > -1)
+          .splice(0, 3);
+        console.log(this.friendsToDisplay);
       },
     },
   };
@@ -73,4 +79,37 @@
     background: white;
     color: chocolate;
   }
+
+  .friend {
+    margin: 5px 0;
+    padding-right: 10px;
+    font-weight: bold;
+    font-size: 16px;
+    background: chocolate;
+    color: cornsilk;
+    cursor: pointer;
+    width: 300px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+  }
+
+  .friend:hover {
+    margin-left: 10px;
+    padding-right: 0;
+    width: 290px;
+    background: cornsilk;
+    color: chocolate;
+  }
+  img {
+    border-radius: 50%;
+  }
+
+  .friend-name {
+    margin: auto 5px;
+  }
+   input{
+     width:300px;
+   }
+
 </style>

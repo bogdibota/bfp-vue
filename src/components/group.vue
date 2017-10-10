@@ -1,10 +1,14 @@
 <template>
   <div class="two-column">
     <div class="left-column">
-      <h1>{{ group.name }}</h1>
+      <h1>{{ group.name }}
+        <input v-model="group.name" v-if="isEdit">
+        <button v-if="isEdit" v-on:click="updateGroupName()">ok</button>
+        <button v-if="!isEdit" v-on:click="isEdit = !isEdit">Edit</button>
+      </h1>
     </div>
     <div class="right-column">
-      <friend-list :header="'Members'" :items="group.users"></friend-list>
+      <friend-list :header="'Members'" :items="group.users" :isGroupView="true" :groupId="groupId"></friend-list>
       <add-member-dialog :groupId="groupId" :friends="userNotInGroup"></add-member-dialog>
     </div>
   </div>
@@ -15,6 +19,7 @@
   import AddMemberDialog from './add-member-dialog';
   import * as bogdiSServiceInThisFile from './bfp-api';
   /* eslint-disable linebreak-style */
+  // TODO: refactor add member dialog => no refresh on page
 
   export default {
     components: { FriendList, AddMemberDialog },
@@ -23,7 +28,9 @@
       return {
         groupId: '',
         group: {},
+        asd: 'asd',
         userNotInGroup: [],
+        isEdit: false,
       };
     },
     created() {
@@ -33,6 +40,7 @@
           this.$route.params.id, `{
               name
               users{
+                id
                 name
                 avatar
                 }
@@ -49,6 +57,15 @@
         .then(({ data: { myFriends } }) => {
           this.userNotInGroup = myFriends;
         });
+    },
+    methods: {
+      updateGroupName() {
+        this.isEdit = !this.isEdit;
+        bogdiSServiceInThisFile.updateGroup(this.groupId, this.group.name, null, null, '{name}')
+          .then(({ data: { updateGroup: { name } } }) => {
+            this.group.name = name;
+          });
+      },
     },
   };
 </script>
