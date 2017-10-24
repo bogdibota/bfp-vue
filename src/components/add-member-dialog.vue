@@ -60,7 +60,7 @@
         this.friendsToDisplay = this.friends
           .filter(({ name }) => name.toLowerCase().indexOf(this.newMemberName.toLowerCase()) > -1)
           .splice(0, 3);
-        console.log(this.friendsToDisplay);
+//        console.log(this.friendsToDisplay);
       },
     },
   };

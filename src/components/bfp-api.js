@@ -1,6 +1,7 @@
 import UserService from './user-service';
+import { BACKEND_URL } from '../env';
 
-const graphQLServer = 'http://be.gfp.dvkiin.xyz:8080/graphql';
+const graphQLServer = BACKEND_URL;
 
 const myHeaders = new Headers();
 myHeaders.append('Content-Type', 'application/json');

@@ -43,7 +43,7 @@
         this.$refs[ref].close();
       },
       onOpen() {
-        console.log('Opened');
+//        console.log('Opened');
       },
       onClose(type) {
         if (type === 'ok') {

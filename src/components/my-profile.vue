@@ -43,7 +43,7 @@
         }`)
         .then(({ data: { login: { avatar, name } } = {}, error }) => {
           if (error || !avatar) {
-            console.log(error);
+//            console.log(error);
           } else {
             this.avatar = avatar;
             this.userName = name;

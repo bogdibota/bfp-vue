@@ -1,15 +1,21 @@
 <template>
   <div id="home">
-      <button v-on:click="login()">Login with facebook
-      </button>
+    <button v-on:click="login()">Login with facebook
+    </button>
   </div>
 </template>
 <script>
+  import { FB_CLIENT_ID, FB_REDIRECT_URL } from '../env';
+
   export default {
     name: 'Home',
     methods: {
       login() {
-        window.location = 'https://www.facebook.com/v2.10/dialog/oauth?client_id=1462447443831110&redirect_uri=http://dvkiin.xyz:8080/redirecter&response_type=token&scope=public_profile,user_friends';
+        window.location = 'https://www.facebook.com/v2.10/dialog/oauth' +
+          `?client_id=${FB_CLIENT_ID}` +
+          `&redirect_uri=${FB_REDIRECT_URL}` +
+          '&response_type=token' +
+          '&scope=public_profile,user_friends';
       },
     },
   };
