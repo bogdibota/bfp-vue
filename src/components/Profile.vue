@@ -1,12 +1,13 @@
 <template>
     <div class="profile">
         <div class="header">
-            <button v-on:click="navigate()">Home</button>
+            <button @click="navigate()">Home</button>
         </div>
         <h1>This is the profile page</h1>
         <div>
-            <avatar v-bind:name="user.name" v-bind:src="user.avatar"></avatar>
-            firstName: {{ user.name }} <br/>
+            <avatar :username="user.name || ''" :src="user.avatar || ''"></avatar>
+            firstName: {{ user.name }}
+            <br/>
         </div>
     </div>
 </template>

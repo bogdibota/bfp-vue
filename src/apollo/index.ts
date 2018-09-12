@@ -16,7 +16,7 @@ const apolloClient = new ApolloClient({
     connectToDevTools: true,
 })
 
-export const apolloProvider = new VueApollo({
+export default new VueApollo({
     defaultClient: apolloClient,
 })
 

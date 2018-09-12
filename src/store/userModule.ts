@@ -1,4 +1,4 @@
-import {apolloProvider} from '../apollo/index'
+import apolloProvider from '../apollo'
 import gql from 'graphql-tag'
 
 export const userModule = {
