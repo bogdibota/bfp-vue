@@ -14,6 +14,11 @@ export const userModule = {
         CURRENT_USER_LOADED(state, user) {
             state.name = user.name
             state.avatar = user.avatar
+        },
+        LOGOUT(state) {
+            state.accessToken = null
+            state.name = 'Your name here'
+            state.avatar = null
         }
     },
     actions: {
@@ -40,7 +45,10 @@ export const userModule = {
             })
 
             context.commit('CURRENT_USER_LOADED', response.data.login);
-        }
+        },
+        logout(context) {
+            context.commit('LOGOUT')
+        },
     }
 }
 

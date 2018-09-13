@@ -1,22 +1,32 @@
 <template>
-    <div class="profile">
-        <div class="header">
-            <button @click="navigate()">Home</button>
-        </div>
-        <h1>This is the profile page</h1>
-        <div>
-            <avatar :username="user.name || ''" :src="user.avatar || ''"></avatar>
-            firstName: {{ user.name }}
-            <br/>
-        </div>
-    </div>
+    <v-app id="inspire">
+        <Header/>
+        <v-content>
+            <v-container fluid fill-height>
+                <v-layout
+                        align-center
+                        column
+                >
+                    <v-avatar size="80px">
+                        <img
+                                v-if="user.avatar"
+                                :src="user.avatar"
+                                alt="Avatar"
+                        >
+                    </v-avatar>
+                    {{ user.name }}
+                    <br/>
+                </v-layout>
+            </v-container>
+        </v-content>
+    </v-app>
 </template>
 
 <script>
     import Vue from 'vue';
     import router from '../router'
     import Avatar from 'vue-avatar'
-
+    import Header from './Header'
 
     export default Vue.extend({
         name: 'profile',
@@ -38,7 +48,8 @@
             },
         },
         components: {
-            Avatar
+            Avatar,
+            Header
         },
     });
 </script>
