@@ -37,7 +37,7 @@
 
 <script>
     import Vue from 'vue';
-    import {FB_CLIENT_ID, FB_REDIRECT_URL} from "../env";
+    import {facebookLoginUrl, removeAccessToken} from "../lib/facebook";
 
     export default Vue.extend({
         name: 'Header',
@@ -46,17 +46,13 @@
                 this.$router.push({name: to});
             },
             loggedIn() {
-                console.log(this.$store.state.user.accessToken);
                 return this.$store.state.user.accessToken
             },
             login() {
-                window.location.href = 'https://www.facebook.com/v2.10/dialog/oauth' +
-                    `?client_id=${FB_CLIENT_ID}` +
-                    `&redirect_uri=${FB_REDIRECT_URL}` +
-                    '&response_type=token' +
-                    '&scope=public_profile,user_friends';
+                window.location.href = facebookLoginUrl
             },
             logout() {
+                removeAccessToken();
                 this.$store.dispatch('logout');
             },
         },

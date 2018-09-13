@@ -1,30 +1,32 @@
-import apolloProvider from '../apollo'
-import gql from 'graphql-tag'
+import apolloProvider from '../apollo';
+import gql from 'graphql-tag';
+
+const initialState = {
+    accessToken: null,
+    name: 'Your name here',
+    avatar: null,
+};
+
+const overrideProps = (to, from) => Object.keys(from).forEach(key => to[key] = from[key]);
 
 export const userModule = {
-    state: {
-        accessToken: null,
-        name: 'Your name here',
-        avatar: null,
-    },
+    state: { ...initialState },
     mutations: {
-        LOGIN(state, accessToken) {
-            state.accessToken = accessToken
+        LOGIN_SUCCESS(state, accessToken) {
+            state.accessToken = accessToken;
         },
         CURRENT_USER_LOADED(state, user) {
-            state.name = user.name
-            state.avatar = user.avatar
+            state.name = user.name;
+            state.avatar = user.avatar;
         },
         LOGOUT(state) {
-            state.accessToken = null
-            state.name = 'Your name here'
-            state.avatar = null
-        }
+            overrideProps(state, initialState);
+        },
     },
     actions: {
-        async login(context, accessToken) {
-            context.commit('LOGIN', accessToken)
-            await context.dispatch('loadCurrentUser')
+        async login_success(context, accessToken) {
+            context.commit('LOGIN_SUCCESS', accessToken);
+            await context.dispatch('loadCurrentUser');
         },
         async loadCurrentUser(context) {
             const mutation = gql`
@@ -34,21 +36,21 @@ export const userModule = {
                           avatar
                     }
                 }
-                `
+                `;
 
             const variables = {
-                accessToken: context.state.accessToken
-            }
+                accessToken: context.state.accessToken,
+            };
 
             const response = await apolloProvider.defaultClient.mutate({
-                mutation, variables
-            })
+                mutation, variables,
+            });
 
             context.commit('CURRENT_USER_LOADED', response.data.login);
         },
         logout(context) {
-            context.commit('LOGOUT')
+            context.commit('LOGOUT');
         },
-    }
-}
+    },
+};
 

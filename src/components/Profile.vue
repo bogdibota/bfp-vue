@@ -28,13 +28,17 @@
     import Avatar from 'vue-avatar'
     import Header from './Header'
 
+    import {saveAccessToken} from "../lib/facebook";
+
+
     export default Vue.extend({
         name: 'profile',
         created: function () {
-            // `this` points to the vm instance
-            const regex = /access_token=(.*)&/g.exec(window.location);
-            if (regex && regex[1]) {
-                this.$store.dispatch('login', regex[1]);
+            const hash = window.location.hash;
+            if (hash && ~hash.indexOf("#access_token")) {
+                const [, accessToken, expiresIn] = /#access_token=([a-zA-Z0-9]+)&expires_in=([0-9]+)/.exec(window.location);
+                saveAccessToken(accessToken, expiresIn);
+                this.$store.dispatch('login_success', accessToken);
             }
         },
         methods: {
