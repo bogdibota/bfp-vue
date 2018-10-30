@@ -5,7 +5,7 @@
             <v-container fluid>
                 <div>
                     <ul v-for="group in myGroups" class="flex-container">
-                        <li class="flex-item">
+                        <li class="flex-item" @click="navigate('group-view', group.name, group.id)">
                             <v-icon>group</v-icon>
                             {{group.name}}
                         </li>
@@ -145,6 +145,9 @@
             },
         },
         methods: {
+            navigate(to, groupName, groupId) {
+                this.$router.push({name: to, params: {groupName: groupName, groupId: groupId}});
+            },
             addGroup() {
                 this.$apollo.mutate({
                     mutation: CREATE_GROUP_MUTATION,
