@@ -1,6 +1,6 @@
 <template>
     <v-app id="inspire">
-        <Header/>
+        <Header v-bind:headerTitle="'My profile'"/>
         <v-content>
             <v-container fluid fill-height>
                 <v-layout

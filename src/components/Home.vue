@@ -1,6 +1,6 @@
 <template>
     <v-app id="inspire">
-        <Header/>
+        <Header v-bind:headerTitle="'BFS'"/>
         <v-content>
             <v-container fluid>
 

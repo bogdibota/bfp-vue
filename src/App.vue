@@ -18,7 +18,14 @@
 <script>
     import Vue from 'vue';
     import { facebookLoginUrl, shouldRelog, getAccessToken } from './lib/facebook';
+    import BootstrapVue from 'bootstrap-vue'
+    import 'bootstrap/dist/css/bootstrap.css'
+    import 'bootstrap-vue/dist/bootstrap-vue.css'
+    //import VueFlex from "vue-flex";
+    //import "vue-flex/dist/vue-flex.css";
 
+    Vue.use(BootstrapVue);
+    //Vue.use(VueFlex);
 
     export default Vue.extend({
         name: 'App',
