@@ -22,12 +22,21 @@
                         <v-list-tile-title>Profile</v-list-tile-title>
                     </v-list-tile-content>
                 </v-list-tile>
+                <!-- Andreea O-->
+                <v-list-tile @click="navigate('groups')">
+                    <v-list-tile-action>
+                        <v-icon>group</v-icon>
+                    </v-list-tile-action>
+                    <v-list-tile-content>
+                        <v-list-tile-title>Groups</v-list-tile-title>
+                    </v-list-tile-content>
+                </v-list-tile>
             </v-list>
         </v-navigation-drawer>
         <v-toolbar color="indigo" dark fixed app>
             <v-toolbar-side-icon @click="drawer = !drawer"></v-toolbar-side-icon>
             <v-spacer></v-spacer>
-            <v-toolbar-title>BFP</v-toolbar-title>
+            <v-toolbar-title>{{headerTitle}}</v-toolbar-title>
             <v-spacer></v-spacer>
             <v-btn v-if="loggedIn() === null" flat @click="login()">Login with facebook</v-btn>
             <v-btn v-else flat @click="logout()">Logout</v-btn>
@@ -57,7 +66,11 @@
             },
         },
         data: () => ({
-            drawer: false
+            drawer: false,
+
         }),
+        props: ['headerTitle']
+
+
     });
 </script>
