@@ -132,7 +132,6 @@
             return {
                 myGroups: [],
                 groupName: '',
-                showDialog: false,
                 dialog: '',
             };
         },

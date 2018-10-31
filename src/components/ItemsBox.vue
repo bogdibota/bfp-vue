@@ -1,71 +1,84 @@
 <template>
     <div>
         <v-content>
-        <ul v-for="item in items" class="flex-container">
-            <li class="flex-item">
-                <v-icon>{{icon}}</v-icon>
-                {{item}}
-            </li>
-        </ul>
-        <ul class="flex-container">
-            <li class="flex-item">
-                <v-dialog  width="500">
-                    <div slot="activator">
-                        <v-icon>add</v-icon>
-                        Add {{element}}
-                    </div>
+            <ul v-for="item in items" class="flex-container">
+                <li class="flex-item">
+                    <v-icon>{{icon}}</v-icon>
+                    {{item}}
+                </li>
+            </ul>
+            <ul class="flex-container">
+                <li class="flex-item">
+                    <v-dialog v-model="dialog" width="500">
+                        <div slot="activator" @click="loadFriends()">
+                            <v-icon>add</v-icon>
+                            Add {{element}}
+                        </div>
+                        <v-card>
+                            <v-card-title
+                                    class="headline grey lighten-2"
+                                    primary-title>
+                                Add {{element}}:
+                            </v-card-title>
 
-                    <v-card>
-                        <v-card-title
-                                class="headline grey lighten-2"
-                                primary-title>
-                            Add group:
-                        </v-card-title>
+                            <!--<v-card-text>
+                                <v-text-field type="text" v-model="itemName" placeholder='Insert name'/>
+                            </v-card-text>-->
+                            <v-card-text>
+                                <v-autocomplete v-model="selected" :search-input.sync="searchInput" :items="searchItems"
+                                           :debounce-search=".5"></v-autocomplete>
+                            </v-card-text>
 
-                        <v-card-text>
-                            <v-text-field type="text" placeholder="Person name"/>
-                        </v-card-text>
-
-                        <v-divider></v-divider>
-
-                        <v-card-actions>
-                            <v-spacer></v-spacer>
-                            <v-btn
-                                    color="primary"
-                                    flat
-                                    @click="dialog = false "
-                            >
-                                Close
-                            </v-btn>
-                            <v-btn
-                                    color="primary"
-                                    flat
-                                    @click="addItem()"
-                            >
-                                Add
-                            </v-btn>
-                        </v-card-actions>
-                    </v-card>
-                </v-dialog>
-            </li>
-
-        </ul>
+                            <v-card-actions>
+                                <v-btn color="primary" flat @click="dialog = false">
+                                    Close
+                                </v-btn>
+                                <v-btn color="primary" flat @click="addItem()">
+                                    Add
+                                </v-btn>
+                            </v-card-actions>
+                        </v-card>
+                    </v-dialog>
+                </li>
+            </ul>
         </v-content>
     </div>
 </template>
 
 <script>
     import Vue from 'vue';
+    import { GET_PERSONS_QUERY } from '../apollo/graphql';
+    import { getAccessToken } from '../lib/facebook';
 
     export default {
         name: 'items-box',
-
+        data: () => ({
+            dialog: '',
+            selected: 'ana',
+            searchInput: '',
+            searchItems: [],
+        }),
         methods: {
+            loadFriends() {
+                 this.$apollo.query({
+                    query: GET_PERSONS_QUERY,
+                    variables: {
+                        accessToken: getAccessToken(),
+                    }
+                }).then((data) => {
+                    this.searchItems=data.myFriends})
+                    console.log(this.searchItems)
+            },
             addItem() {
-                alert("item added");
-            }
+                alert("Item trying to add")
+            },
         },
-        props: ['items','icon','element']
+        watch: {
+            searchInput(val) {
+
+            },
+        },
+        props: ['items', 'icon', 'element'],
     };
 </script>
 

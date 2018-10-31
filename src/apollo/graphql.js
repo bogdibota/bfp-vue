@@ -9,7 +9,7 @@ export const ALL_GROUPS_QUERY = gql`
     }
 `;
 
-export const GET_PERSONS_FROM_GROUP_QUERY = gql`
+export const GET_PERSONS_QUERY = gql`
     query myFriends($accessToken: String!, $excludeGroupId:String) {
         myFriends(accessToken: $accessToken, excludeGroupId: $excludeGroupId) {
             id

@@ -1,27 +1,30 @@
 <template>
-    <v-content>
-        <v-container fluid>
-            <Header v-bind:headerTitle="groupName"/>
-            <section title="People">
-                <v-subheader><h3>People</h3></v-subheader>
-                <v-divider></v-divider>
-                <ItemsBox v-bind:items="getUsers()" v-bind:icon="'person'" v-bind:element="'person'"/>
-            </section>
+    <v-app>
+        <v-content>
+            <v-container fluid>
+                <Header v-bind:headerTitle="groupName"/>
+                <section title="People">
+                    <v-subheader><h3>People</h3></v-subheader>
+                    <v-divider></v-divider>
+                    <ItemsBox v-bind:items="getUsers()" v-bind:icon="'person'" v-bind:element="'person'"/>
+                </section>
 
-            <section title="Expanses">
-                <v-subheader><h3>Expanses</h3></v-subheader>
-                <v-divider></v-divider>
-                <ItemsBox v-bind:items="getExpanses()" v-bind:icon="'add_shopping_cart'" v-bind:element="'expanse'"/>
-            </section>
+                <section title="Expanses">
+                    <v-subheader><h3>Expanses</h3></v-subheader>
+                    <v-divider></v-divider>
+                    <ItemsBox v-bind:items="getExpanses()" v-bind:icon="'add_shopping_cart'"
+                              v-bind:element="'expanse'"/>
+                </section>
 
-            <section title="Transactions">
-                <v-subheader><h3>Transactions</h3></v-subheader>
-                <v-divider></v-divider>
-                <ItemsBox v-bind:items="getTransactions()" v-bind:icon="'account_balance'"
-                          v-bind:element="'transaction'"/>
-            </section>
-        </v-container>
-    </v-content>
+                <section title="Transactions">
+                    <v-subheader><h3>Transactions</h3></v-subheader>
+                    <v-divider></v-divider>
+                    <ItemsBox v-bind:items="getTransactions()" v-bind:icon="'account_balance'"
+                              v-bind:element="'transaction'"/>
+                </section>
+            </v-container>
+        </v-content>
+    </v-app>
 </template>
 
 <script>
@@ -70,7 +73,6 @@
                 return this.group.transactions;
             },
         },
-
     };
 </script>
 
