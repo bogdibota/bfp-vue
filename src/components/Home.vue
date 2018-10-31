@@ -1,6 +1,6 @@
 <template>
     <v-app id="inspire">
-        <Header v-bind:headerTitle="'BFS'"/>
+        <Header :headerTitle="'BFS'"/>
         <v-content>
             <v-container fluid>
 

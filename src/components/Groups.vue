@@ -157,14 +157,14 @@
                         data.push(addGroup);
                         store.writeQuery({ query: ALL_GROUPS_QUERY, data });
 
-                        const todoQuery = {
+                        const allGroupsQuery = {
                             query: ALL_GROUPS_QUERY,
                             variables: { accessToken: getAccessToken() },
                         };
 
-                        const todoData = store.readQuery(todoQuery);
-                        todoData.myGroups.push(addGroup);
-                        store.writeQuery({ ...todoQuery, data: todoData });
+                        const allGroupsData = store.readQuery(allGroupsQuery);
+                        allGroupsData.myGroups.push(addGroup);
+                        store.writeQuery({ ...allGroupsQuery, data: allGroupsData });
                     },
                     optimisticResponse: {
                         __typename: 'Mutation',
@@ -177,7 +177,7 @@
 
                     },
                 }).then((data) => {
-                    console.log(data);
+
                 }).catch((error) => {
                     console.error(error);
                 });
