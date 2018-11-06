@@ -54,12 +54,12 @@
                                             </v-chip>
                                         </template>
                                         <template slot="item" slot-scope="data">
-                                                <v-list-tile-avatar>
-                                                    <img :src="data.item.avatar">
-                                                </v-list-tile-avatar>
-                                                <v-list-tile-content>
-                                                    <v-list-tile-title v-html="data.item.name"></v-list-tile-title>
-                                                </v-list-tile-content>
+                                            <v-list-tile-avatar>
+                                                <img :src="data.item.avatar">
+                                            </v-list-tile-avatar>
+                                            <v-list-tile-content>
+                                                <v-list-tile-title v-html="data.item.name"></v-list-tile-title>
+                                            </v-list-tile-content>
                                         </template>
                                     </v-select>
                                 </v-flex>
@@ -113,18 +113,19 @@
                 });
             },
             addItem() {
-                for (var i = 0; i < this.selectedFriends.length; i++) {
-                    this.$apollo.mutate({
-                        mutation: UPDATE_GROUP_MUTATION,
-                        variables: {
-                            accessToken: getAccessToken(),
-                            id: this.groupId,
-                            addUserId: this.selectedFriends[i],
-                        },
-                    }).then((response) => {
-                        this.items = response.data.updateGroup.users;
-                    });
-                }
+                this.selectedFriends.forEach(function (item) {
+                        this.$apollo.mutate({
+                            mutation: UPDATE_GROUP_MUTATION,
+                            variables: {
+                                accessToken: getAccessToken(),
+                                id: this.groupId,
+                                addUserId: item,
+                            },
+                        }).then((response) => {
+                            this.items = response.data.updateGroup.users;
+                        });
+                    },
+                );
             },
         },
         props: ['items', 'groupId'],

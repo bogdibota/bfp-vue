@@ -145,7 +145,9 @@
         },
         methods: {
             navigate(to, groupId) {
+                //console.log("navigate")
                 this.$router.push({name: to, params: { groupId: groupId}});
+
             },
             addGroup() {
                 this.$apollo.mutate({

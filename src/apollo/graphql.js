@@ -1,28 +1,6 @@
 import gql from 'graphql-tag';
 
-export const ALL_GROUPS_QUERY = gql`
-    query myGroups($accessToken: String!) {
-        myGroups(accessToken: $accessToken) {
-            id
-            name
-        }
-    }
-`;
-
-export const GET_PERSONS_QUERY = gql`
-    query myFriends($accessToken: String!, $excludeGroupId:String) {
-        myFriends(accessToken: $accessToken, excludeGroupId: $excludeGroupId) {
-            id
-            name
-            avatar
-        }
-    }
-`;
-
-
-export const GET_GROUP_QUERY = gql`
-    query groupById($accessToken: String!, $id:String!) {
-        groupById(accessToken: $accessToken, id: $id) {
+const groupFields = `{
             name
             owner {
                 id
@@ -49,7 +27,33 @@ export const GET_GROUP_QUERY = gql`
                 name
                 avatar
             }
-            
+    }
+`;
+
+export const ALL_GROUPS_QUERY = gql`
+    query myGroups($accessToken: String!) {
+        myGroups(accessToken: $accessToken) {
+            id
+            name
+        }
+    }
+`;
+
+export const GET_PERSONS_QUERY = gql`
+    query myFriends($accessToken: String!, $excludeGroupId:String) {
+        myFriends(accessToken: $accessToken, excludeGroupId: $excludeGroupId) {
+            id
+            name
+            avatar
+        }
+    }
+`;
+
+
+export const GET_GROUP_QUERY = gql`
+    query groupById($accessToken: String!, $id:String!) {
+        groupById(accessToken: $accessToken, id: $id) {
+            ${groupFields}
         }
     }
 `;
@@ -61,29 +65,7 @@ export const CREATE_GROUP_MUTATION = gql`
             name: $name
         )
         {
-           name
-            owner {
-                id
-                name
-            }
-            expenses {
-                name
-                price
-            }
-            transactions {
-                from {
-                    name
-                }
-                to {
-                    name
-                }
-                price
-            }
-            users {
-                id
-                name
-                avatar
-            }
+           ${groupFields}
         }
     }
 `;
@@ -118,30 +100,7 @@ export const ADD_EXPENSE_MUTATION = gql`
              name: $name,
              price: $price)
         {
-             name
-            owner {
-                id
-                name
-            }
-            expenses {
-                name
-                price
-            }
-            transactions {
-                from {
-                    name
-                }
-                to {
-                    name
-                }
-                comment
-                price
-            }
-            users {
-                id
-                name
-                avatar
-            }
+            ${groupFields}
         }
     }
 `;
@@ -156,32 +115,7 @@ export const ADD_TRANSACTION_MUTATION = gql`
              comment: $comment,
              price: $price)
         {
-            name
-            owner {
-                id
-                name
-            }
-            expenses {
-                name
-                price
-            }
-            transactions {
-                from {
-                    name
-                    avatar
-                }
-                to {
-                    name
-                    avatar
-                }
-                price
-                comment
-            }
-            users {
-                id
-                name
-                avatar
-            }
+            ${groupFields}
         }
     }
 `;
