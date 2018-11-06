@@ -2,25 +2,26 @@
     <v-app>
         <v-content>
             <v-container fluid>
-                <Header v-bind:headerTitle="groupName"/>
+                <Header v-bind:headerTitle="this.group.name"/>
                 <section title="People">
                     <v-subheader><h3>People</h3></v-subheader>
                     <v-divider></v-divider>
-                    <ItemsBox v-bind:items="getUsers()" v-bind:icon="'person'" v-bind:element="'person'"/>
+                    <FriendsItemsBox :items="this.group.users" :groupId="this.groupId"/>
                 </section>
-
-                <section title="Expanses">
-                    <v-subheader><h3>Expanses</h3></v-subheader>
+                <v-space></v-space>
+                <section title="Expenses">
+                    <v-subheader><h3>Expenses</h3></v-subheader>
                     <v-divider></v-divider>
-                    <ItemsBox v-bind:items="getExpanses()" v-bind:icon="'add_shopping_cart'"
-                              v-bind:element="'expanse'"/>
+                    <ExpenseItemsBox :items="this.group.expenses" :usersIds="getUsersIds()"
+                                     :ownerId="this.group.owner.id"
+                                     :groupId="this.groupId"/>
                 </section>
-
+                <v-space></v-space>
                 <section title="Transactions">
                     <v-subheader><h3>Transactions</h3></v-subheader>
                     <v-divider></v-divider>
-                    <ItemsBox v-bind:items="getTransactions()" v-bind:icon="'account_balance'"
-                              v-bind:element="'transaction'"/>
+                    <TransactionItemsBox :items="this.group.transactions" :groupId="this.groupId"
+                                         :membersOfGroup="this.group.users"/>
                 </section>
             </v-container>
         </v-content>
@@ -28,13 +29,13 @@
 </template>
 
 <script>
-    import Vue from 'vue';
+
     import Header from './Header';
-    import ItemsBox from './ItemsBox';
-    import { GET_PERSONS_FROM_GROUP_QUERY } from '../apollo/graphql';
+    import TransactionItemsBox from './TransactionItemsBox';
+    import FriendsItemsBox from './FriendsItemsBox';
+    import ExpenseItemsBox from './ExpenseItemsBox';
     import { GET_GROUP_QUERY } from '../apollo/graphql';
     import { getAccessToken } from '../lib/facebook';
-
 
     export default {
         name: 'group-view',
@@ -42,40 +43,38 @@
             return {
                 groupName: '',
                 groupId: '',
-                persons: ['sarah', 'george', 'ana'],
-                expanses: ['e1', 'e2', 'e3'],
-                transactions: ['t1', 't2', 't3'],
+                group: '',
+                ids: [],
             };
         },
         created() {
             this.groupName = this.$route.params.groupName;
             this.groupId = this.$route.params.groupId;
-            this.group = this.$apollo.query({
+
+            this.$apollo.query({
                 query: GET_GROUP_QUERY,
                 variables: {
                     accessToken: getAccessToken(),
                     id: this.groupId,
                 },
-            });
+            }).then(((response) => {
+                this.group = response.data.groupById;
+            }));
         },
         components: {
             Header,
-            ItemsBox,
+            TransactionItemsBox,
+            FriendsItemsBox,
+            ExpenseItemsBox,
         },
         methods: {
-            getUsers() {
-                return this.group.users;
-            },
-            getExpanses() {
-                return this.group.expanses;
-            },
-            getTransactions() {
-                return this.group.transactions;
+            getUsersIds() {
+                var ids = [];
+                this.group.users.forEach(function (item) {
+                    ids.push(item.id);
+                });
+                return ids;
             },
         },
     };
 </script>
-
-<style scoped>
-
-</style>

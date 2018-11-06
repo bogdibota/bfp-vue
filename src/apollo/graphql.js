@@ -35,15 +35,19 @@ export const GET_GROUP_QUERY = gql`
             transactions {
                 from {
                     name
+                    avatar
                 }
                 to {
                     name
+                    avatar
                 }
                 price
+                comment
             }
             users {
                 id
                 name
+                avatar
             }
             
         }
@@ -57,8 +61,127 @@ export const CREATE_GROUP_MUTATION = gql`
             name: $name
         )
         {
+           name
+            owner {
+                id
+                name
+            }
+            expenses {
+                name
+                price
+            }
+            transactions {
+                from {
+                    name
+                }
+                to {
+                    name
+                }
+                price
+            }
+            users {
+                id
+                name
+                avatar
+            }
+        }
+    }
+`;
+
+export const UPDATE_GROUP_MUTATION = gql`
+    mutation updateGroup($accessToken: String!, $id: String!, $addUserId: String, $name: String) {
+        updateGroup(
+            accessToken: $accessToken,
+            id: $id,
+            addUserId: $addUserId,
+            name: $name
+        )
+        {
             id
             name
+            users {
+                id
+                name
+                avatar
+            }
+        }         
+}
+`;
+
+export const ADD_EXPENSE_MUTATION = gql`
+    mutation addExpense($accessToken: String!, $groupId: String!, $payerId: String!, $peopleIds: [String]!, $name: String!, $price: Float!) {
+        addExpense(
+             accessToken: $accessToken, 
+             groupId: $groupId,
+             payerId: $payerId,
+             peopleIds: $peopleIds,
+             name: $name,
+             price: $price)
+        {
+             name
+            owner {
+                id
+                name
+            }
+            expenses {
+                name
+                price
+            }
+            transactions {
+                from {
+                    name
+                }
+                to {
+                    name
+                }
+                comment
+                price
+            }
+            users {
+                id
+                name
+                avatar
+            }
+        }
+    }
+`;
+
+export const ADD_TRANSACTION_MUTATION = gql`
+        mutation addTransaction($accessToken: String!, $groupId: String!, $fromId: String!, $toId: String!, $comment: String!, $price: Float!) {
+        addTransaction(
+             accessToken: $accessToken, 
+             groupId: $groupId,
+             fromId: $fromId,
+             toId: $toId,
+             comment: $comment,
+             price: $price)
+        {
+            name
+            owner {
+                id
+                name
+            }
+            expenses {
+                name
+                price
+            }
+            transactions {
+                from {
+                    name
+                    avatar
+                }
+                to {
+                    name
+                    avatar
+                }
+                price
+                comment
+            }
+            users {
+                id
+                name
+                avatar
+            }
         }
     }
 `;
