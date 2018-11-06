@@ -1,32 +1,31 @@
 import gql from 'graphql-tag';
 
-const groupFields = `{
+const groupFields = `
+    name
+    owner {
+        id
+        name
+    }
+    expenses {
+        name
+        price
+    }
+    transactions {
+        from {
             name
-            owner {
-                id
-                name
-            }
-            expenses {
-                name
-                price
-            }
-            transactions {
-                from {
-                    name
-                    avatar
-                }
-                to {
-                    name
-                    avatar
-                }
-                price
-                comment
-            }
-            users {
-                id
-                name
-                avatar
-            }
+            avatar
+        }
+        to {
+            name
+            avatar
+        }
+        price
+        comment
+    }
+    users {
+        id
+        name
+        avatar
     }
 `;
 
@@ -63,8 +62,7 @@ export const CREATE_GROUP_MUTATION = gql`
         createGroup(
             accessToken: $accessToken,
             name: $name
-        )
-        {
+        ) {
            ${groupFields}
         }
     }
@@ -77,8 +75,7 @@ export const UPDATE_GROUP_MUTATION = gql`
             id: $id,
             addUserId: $addUserId,
             name: $name
-        )
-        {
+        ) {
             id
             name
             users {
@@ -87,7 +84,7 @@ export const UPDATE_GROUP_MUTATION = gql`
                 avatar
             }
         }         
-}
+    }
 `;
 
 export const ADD_EXPENSE_MUTATION = gql`
@@ -98,23 +95,23 @@ export const ADD_EXPENSE_MUTATION = gql`
              payerId: $payerId,
              peopleIds: $peopleIds,
              name: $name,
-             price: $price)
-        {
+             price: $price
+        ) {
             ${groupFields}
         }
     }
 `;
 
 export const ADD_TRANSACTION_MUTATION = gql`
-        mutation addTransaction($accessToken: String!, $groupId: String!, $fromId: String!, $toId: String!, $comment: String!, $price: Float!) {
+    mutation addTransaction($accessToken: String!, $groupId: String!, $fromId: String!, $toId: String!, $comment: String!, $price: Float!) {
         addTransaction(
              accessToken: $accessToken, 
              groupId: $groupId,
              fromId: $fromId,
              toId: $toId,
              comment: $comment,
-             price: $price)
-        {
+             price: $price
+        ) {
             ${groupFields}
         }
     }
