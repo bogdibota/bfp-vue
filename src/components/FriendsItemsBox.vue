@@ -1,7 +1,7 @@
 <template>
     <div>
         <v-content>
-            <ItemsBox :items="groupMembers">
+            <ItemsBox :items="items">
                 <template slot="elementBox" slot-scope="props">
                     <v-avatar size="45px">
                         <img
@@ -15,7 +15,7 @@
 
                 <template slot="addElementBox">
                     <v-dialog v-model="dialog" width="500">
-                        <div slot="activator" @click="loadFriends()">
+                        <div slot="activator">
                             <v-icon>add</v-icon>
                             Add member
                         </div>
@@ -83,7 +83,7 @@
 </template>
 
 <script>
-    import { GET_PERSONS_QUERY, UPDATE_GROUP_MUTATION } from '../apollo/graphql';
+    import { GET_GROUP_QUERY, GET_PERSONS_QUERY, UPDATE_GROUP_MUTATION } from '../apollo/graphql';
     import { getAccessToken } from '../lib/facebook';
     import ItemsBox from './ItemsBox';
 
@@ -95,27 +95,20 @@
             selectedFriendsIds: [],
             searchInput: '',
             name: '',
-            groupMembers: [],
-
         }),
-        created() {
-            this.groupMembers = this.items;
+        apollo: {
+            friends: {
+                query: GET_PERSONS_QUERY,
+                variables: {
+                    accessToken: getAccessToken(),
+                },
+                update: ({myFriends}) => myFriends,
+            },
         },
         components: {
             ItemsBox,
         },
         methods: {
-            loadFriends() {
-                this.$apollo.query({
-                    query: GET_PERSONS_QUERY,
-                    variables: {
-                        accessToken: getAccessToken(),
-                    },
-                }).then((response) => {
-
-                    this.friends = response.data.myFriends;
-                });
-            },
             addItem() {
                 this.selectedFriendsIds.forEach(friendId => {
                         this.$apollo.mutate({
@@ -125,8 +118,21 @@
                                 id: this.groupId,
                                 addUserId: friendId,
                             },
-                        }).then((response) => {
-                            this.groupMembers = response.data.updateGroup.users;
+                            update: (store, { data: { updateGroup } }) => {
+                                const variables = { accessToken: getAccessToken(), id: updateGroup.id };
+                                const data = store.readQuery({
+                                    query: GET_GROUP_QUERY,
+                                    variables,
+                                });
+
+                                data.groupById.users = updateGroup.users;
+
+                                store.writeQuery({
+                                    query: GET_GROUP_QUERY,
+                                    variables,
+                                    data,
+                                });
+                            },
                         });
                     },
                 );
