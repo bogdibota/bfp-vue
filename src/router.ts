@@ -25,7 +25,7 @@ export default new Router({
             component: Groups
         },
         {
-            path: '/group',
+            path: '/group/:groupId',
             name: 'group-view',
             component: GroupView
         },
