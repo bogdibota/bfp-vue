@@ -1,7 +1,7 @@
 <template>
     <div>
         <v-content>
-            <ItemsBox :items="items">
+            <ItemsBox :items="groupMembers">
                 <template slot="elementBox" slot-scope="props">
                     <v-avatar size="45px">
                         <img
@@ -66,7 +66,6 @@
                             </v-card-text>
 
                             <v-card-actions>
-                                <v-spacer></v-spacer>
                                 <v-btn color="primary" flat @click="addItem()">
                                     Add
                                 </v-btn>
@@ -96,7 +95,12 @@
             selectedFriends: [],
             searchInput: '',
             name: '',
+            groupMembers:[],
+
         }),
+        created(){
+          this.groupMembers=this.items;
+        },
         components: {
             ItemsBox,
         },
@@ -113,16 +117,17 @@
                 });
             },
             addItem() {
+                var self = this;
                 this.selectedFriends.forEach(function (item) {
-                        this.$apollo.mutate({
+                        self.$apollo.mutate({
                             mutation: UPDATE_GROUP_MUTATION,
                             variables: {
                                 accessToken: getAccessToken(),
-                                id: this.groupId,
+                                id: self.groupId,
                                 addUserId: item,
                             },
                         }).then((response) => {
-                            this.items = response.data.updateGroup.users;
+                            self.groupMembers = response.data.updateGroup.users;
                         });
                     },
                 );

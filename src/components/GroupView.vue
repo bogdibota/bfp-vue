@@ -8,7 +8,7 @@
                     <v-divider></v-divider>
                     <FriendsItemsBox :items="this.group.users" :groupId="this.groupId"/>
                 </section>
-                <v-space></v-space>
+
                 <section title="Expenses">
                     <v-subheader><h3>Expenses</h3></v-subheader>
                     <v-divider></v-divider>
@@ -16,7 +16,7 @@
                                      :ownerId="this.group.owner.id"
                                      :groupId="this.groupId"/>
                 </section>
-                <v-space></v-space>
+
                 <section title="Transactions">
                     <v-subheader><h3>Transactions</h3></v-subheader>
                     <v-divider></v-divider>
@@ -70,9 +70,11 @@
         methods: {
             getUsersIds() {
                 var ids = [];
+
                 this.group.users.forEach(function (item) {
                     ids.push(item.id);
                 });
+
                 return ids;
             },
         },
