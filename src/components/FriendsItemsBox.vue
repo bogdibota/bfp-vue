@@ -30,7 +30,7 @@
                                 <v-flex>
                                     <v-select
                                             :items="friends"
-                                            v-model="selectedFriends"
+                                            v-model="selectedFriendsIds"
                                             label="Select"
                                             item-text="name"
                                             item-value="id"
@@ -92,7 +92,7 @@
         data: () => ({
             friends: [],
             dialog: '',
-            selectedFriends: [],
+            selectedFriendsIds: [],
             searchInput: '',
             name: '',
             groupMembers: [],
@@ -117,13 +117,13 @@
                 });
             },
             addItem() {
-                this.selectedFriends.forEach(friend => {
+                this.selectedFriendsIds.forEach(friendId => {
                         this.$apollo.mutate({
                             mutation: UPDATE_GROUP_MUTATION,
                             variables: {
                                 accessToken: getAccessToken(),
                                 id: this.groupId,
-                                addUserId: friend,
+                                addUserId: friendId,
                             },
                         }).then((response) => {
                             this.groupMembers = response.data.updateGroup.users;
