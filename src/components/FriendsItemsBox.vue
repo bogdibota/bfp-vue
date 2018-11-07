@@ -1,7 +1,7 @@
 <template>
     <div>
         <v-content>
-            <ItemsBox :items="items">
+            <ItemsBox :items="groupMembers">
                 <template slot="elementBox" slot-scope="props">
                     <v-avatar size="45px">
                         <img
@@ -30,7 +30,7 @@
                                 <v-flex>
                                     <v-select
                                             :items="friends"
-                                            v-model="selectedFriends"
+                                            v-model="selectedFriendsIds"
                                             label="Select"
                                             item-text="name"
                                             item-value="id"
@@ -66,7 +66,6 @@
                             </v-card-text>
 
                             <v-card-actions>
-                                <v-spacer></v-spacer>
                                 <v-btn color="primary" flat @click="addItem()">
                                     Add
                                 </v-btn>
@@ -93,10 +92,15 @@
         data: () => ({
             friends: [],
             dialog: '',
-            selectedFriends: [],
+            selectedFriendsIds: [],
             searchInput: '',
             name: '',
+            groupMembers: [],
+
         }),
+        created() {
+            this.groupMembers = this.items;
+        },
         components: {
             ItemsBox,
         },
@@ -113,16 +117,16 @@
                 });
             },
             addItem() {
-                this.selectedFriends.forEach(function (item) {
+                this.selectedFriendsIds.forEach(friendId => {
                         this.$apollo.mutate({
                             mutation: UPDATE_GROUP_MUTATION,
                             variables: {
                                 accessToken: getAccessToken(),
                                 id: this.groupId,
-                                addUserId: item,
+                                addUserId: friendId,
                             },
                         }).then((response) => {
-                            this.items = response.data.updateGroup.users;
+                            this.groupMembers = response.data.updateGroup.users;
                         });
                     },
                 );
