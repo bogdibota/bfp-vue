@@ -95,11 +95,11 @@
             selectedFriends: [],
             searchInput: '',
             name: '',
-            groupMembers:[],
+            groupMembers: [],
 
         }),
-        created(){
-          this.groupMembers=this.items;
+        created() {
+            this.groupMembers = this.items;
         },
         components: {
             ItemsBox,
@@ -117,17 +117,16 @@
                 });
             },
             addItem() {
-                var self = this;
-                this.selectedFriends.forEach(function (item) {
-                        self.$apollo.mutate({
+                this.selectedFriends.forEach(friend => {
+                        this.$apollo.mutate({
                             mutation: UPDATE_GROUP_MUTATION,
                             variables: {
                                 accessToken: getAccessToken(),
-                                id: self.groupId,
-                                addUserId: item,
+                                id: this.groupId,
+                                addUserId: friend,
                             },
                         }).then((response) => {
-                            self.groupMembers = response.data.updateGroup.users;
+                            this.groupMembers = response.data.updateGroup.users;
                         });
                     },
                 );
