@@ -1,6 +1,8 @@
 import gql from 'graphql-tag';
+import { getAccessToken } from '../lib/facebook';
 
 const groupFields = `
+    id
     name
     owner {
         id
@@ -56,6 +58,22 @@ export const GET_GROUP_QUERY = gql`
         }
     }
 `;
+
+export const updateGetGroupById = (mutationName, fieldUpdate) => (store, { data }) => {
+    const variables = { accessToken: getAccessToken(), id: data[mutationName].id };
+    const cachedData = store.readQuery({
+        query: GET_GROUP_QUERY,
+        variables,
+    });
+
+    cachedData.groupById[fieldUpdate] = data[mutationName][fieldUpdate];
+
+    store.writeQuery({
+        query: GET_GROUP_QUERY,
+        variables,
+        data: cachedData,
+    });
+};
 
 export const CREATE_GROUP_MUTATION = gql`
     mutation createGroup($accessToken: String!, $name: String!) {

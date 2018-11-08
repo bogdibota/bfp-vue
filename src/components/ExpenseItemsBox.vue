@@ -11,13 +11,13 @@
                     <v-dialog v-model="dialog" width="500">
                         <div slot="activator">
                             <v-icon>add</v-icon>
-                            Add expanse
+                            Add expense
                         </div>
                         <v-card>
                             <v-card-title
                                     class="headline grey lighten-2"
                                     primary-title>
-                                Add expanse:
+                                Add expense:
                             </v-card-title>
                             <v-card-text>
                                 <v-form>
@@ -53,7 +53,7 @@
 </template>
 
 <script>
-    import { ADD_EXPENSE_MUTATION, GET_PERSONS_QUERY, UPDATE_GROUP_MUTATION } from '../apollo/graphql';
+    import { ADD_EXPENSE_MUTATION, updateGetGroupById } from '../apollo/graphql';
     import { getAccessToken } from '../lib/facebook';
     import ItemsBox from './ItemsBox';
 
@@ -62,10 +62,10 @@
         data: () => ({
             dialog: '',
             nameExpense: '',
-            priceExpense:'',
+            priceExpense: '',
         }),
         components: {
-          ItemsBox
+            ItemsBox,
         },
         methods: {
             addItem() {
@@ -78,13 +78,23 @@
                         peopleIds: this.usersIds,
                         name: this.nameExpense,
                         price: this.priceExpense,
-                    }
-                }).then((response) => {
-                    this.items = response.data.addExpense.expenses;
+                    },
+                    update: updateGetGroupById('addExpense', 'expenses'),
                 })
+                    .then(() => {
+                        this.dialog = false;
+                        this.$emit('setSnackbar', {
+                            message: 'Expense was added successfully!',
+                            operationType: 'success',
+                        });
+                    })
+                    .catch(() => this.$emit('setSnackbar', {
+                        message: 'Expense cannot be added!',
+                        operationType: 'error',
+                    }));
             },
         },
-        props: ['items','groupId','usersIds','ownerId'],
+        props: ['items', 'groupId', 'usersIds', 'ownerId'],
     };
 </script>
 

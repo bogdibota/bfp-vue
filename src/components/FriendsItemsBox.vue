@@ -73,7 +73,6 @@
                                     Close
                                 </v-btn>
                             </v-card-actions>
-
                         </v-card>
                     </v-dialog>
                 </template>
@@ -83,7 +82,7 @@
 </template>
 
 <script>
-    import { GET_GROUP_QUERY, GET_PERSONS_QUERY, UPDATE_GROUP_MUTATION } from '../apollo/graphql';
+    import { GET_PERSONS_QUERY, UPDATE_GROUP_MUTATION, updateGetGroupById } from '../apollo/graphql';
     import { getAccessToken } from '../lib/facebook';
     import ItemsBox from './ItemsBox';
 
@@ -102,7 +101,7 @@
                 variables: {
                     accessToken: getAccessToken(),
                 },
-                update: ({myFriends}) => myFriends,
+                update: ({ myFriends }) => myFriends,
             },
         },
         components: {
@@ -118,22 +117,19 @@
                                 id: this.groupId,
                                 addUserId: friendId,
                             },
-                            update: (store, { data: { updateGroup } }) => {
-                                const variables = { accessToken: getAccessToken(), id: updateGroup.id };
-                                const data = store.readQuery({
-                                    query: GET_GROUP_QUERY,
-                                    variables,
+                            update: updateGetGroupById('updateGroup', 'users'),
+                        })
+                            .then(() => {
+                                this.dialog = false;
+                                this.$emit('setSnackbar', {
+                                    message: 'User was added successfully!',
+                                    operationType: 'success',
                                 });
-
-                                data.groupById.users = updateGroup.users;
-
-                                store.writeQuery({
-                                    query: GET_GROUP_QUERY,
-                                    variables,
-                                    data,
-                                });
-                            },
-                        });
+                            })
+                            .catch(() => this.$emit('setSnackbar', {
+                                message: 'User cannot be added!',
+                                operationType: 'error',
+                            }));
                     },
                 );
             },

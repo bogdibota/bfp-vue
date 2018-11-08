@@ -10,6 +10,7 @@
                     <FriendsItemsBox
                             :items="group.users"
                             :groupId="groupId"
+                            @setSnackbar="setSnackAttributes($event)"
                     />
                 </section>
 
@@ -21,6 +22,7 @@
                             :usersIds="userIds"
                             :ownerId="group.owner.id"
                             :groupId="groupId"
+                            @setSnackbar="setSnackAttributes($event)"
                     />
                 </section>
 
@@ -31,8 +33,26 @@
                             :items="group.transactions"
                             :groupId="groupId"
                             :membersOfGroup="group.users"
+                            @setSnackbar="setSnackAttributes($event)"
                     />
                 </section>
+
+                <v-snackbar
+                        v-model="snackbar"
+                        bottom
+                        right
+                        :color="snackOperation"
+                        :timeout=4000
+                >
+                    {{snackMessage}}
+                    <v-btn
+                            flat
+                            @click="snackbar = false"
+                    >
+                        Close
+                    </v-btn>
+                </v-snackbar>
+
             </v-container>
         </v-content>
     </v-app>
@@ -58,6 +78,9 @@
         data() {
             return {
                 group: {},
+                snackMessage: '',
+                snackOperation: '',
+                snackbar: false,
             };
         },
         apollo: {
@@ -70,6 +93,13 @@
                     };
                 },
                 update: ({ groupById }) => groupById,
+            },
+        },
+        methods: {
+            setSnackAttributes(snack) {
+                this.snackbar = true;
+                this.snackMessage = snack.message;
+                this.snackOperation = snack.operationType;
             },
         },
         computed: {
