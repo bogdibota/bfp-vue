@@ -65,7 +65,6 @@
             >
                 {{snackMessage}}
                 <v-btn
-
                         flat
                         @click="snackbar = false"
                 >
@@ -135,8 +134,7 @@
 <script>
     import Vue from 'vue';
     import Header from './Header';
-    import { ALL_GROUPS_QUERY } from '../apollo/graphql';
-    import { CREATE_GROUP_MUTATION } from '../apollo/graphql';
+    import { ALL_GROUPS_QUERY, CREATE_GROUP_MUTATION } from '../apollo/graphql';
     import { getAccessToken } from '../lib/facebook';
 
 
@@ -175,18 +173,13 @@
                         accessToken: getAccessToken(),
                         name: this.groupName,
                     },
-                    update: (store, { data: { addGroup } }) => {
-                        const data = store.readQuery({ query: ALL_GROUPS_QUERY });
-                        data.push(addGroup);
-                        store.writeQuery({ query: ALL_GROUPS_QUERY, data });
-
+                    update: (store, { data: { createGroup } }) => {
                         const allGroupsQuery = {
                             query: ALL_GROUPS_QUERY,
                             variables: { accessToken: getAccessToken() },
                         };
-
                         const allGroupsData = store.readQuery(allGroupsQuery);
-                        allGroupsData.myGroups.push(addGroup);
+                        allGroupsData.myGroups.push(createGroup);
                         store.writeQuery({ ...allGroupsQuery, data: allGroupsData });
                     },
                     optimisticResponse: {
@@ -195,25 +188,25 @@
                             id: null,
                             __typename: 'Group',
                             name: this.groupName,
-                            accessToken: getAccessToken(),
+                            owner: { id: '', name: '', __typename: 'User' },
+                            users: [],
+                            expenses: [],
+                            transactions: [],
                         },
                     },
-
-                }).then((data) => {
-                    this.dialog = false;
-                    this.snackbar = true;
-                    this.snackOperation = 'success';
-                    this.snackMessage = 'Group added successfully !';
-
-                }).catch((error) => {
-                    this.snackbar = true;
-                    this.snackOperation = 'error';
-                    this.snackMessage = 'Group cannot be added !';
-                });
+                })
+                    .then(() => {
+                        this.dialog = false;
+                        this.snackbar = true;
+                        this.snackOperation = 'success';
+                        this.snackMessage = 'Group added successfully !';
+                    })
+                    .catch(() => {
+                        this.snackbar = true;
+                        this.snackOperation = 'error';
+                        this.snackMessage = 'Group cannot be added !';
+                    });
             },
         },
-
     });
 </script>
-
-

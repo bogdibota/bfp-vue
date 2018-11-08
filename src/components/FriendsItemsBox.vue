@@ -82,7 +82,7 @@
 </template>
 
 <script>
-    import { GET_GROUP_QUERY, GET_PERSONS_QUERY, UPDATE_GROUP_MUTATION } from '../apollo/graphql';
+    import { GET_PERSONS_QUERY, UPDATE_GROUP_MUTATION, updateGetGroupById } from '../apollo/graphql';
     import { getAccessToken } from '../lib/facebook';
     import ItemsBox from './ItemsBox';
 
@@ -94,7 +94,6 @@
             selectedFriendsIds: [],
             searchInput: '',
             name: '',
-            groupMembers: [],
         }),
         apollo: {
             friends: {
@@ -110,7 +109,6 @@
         },
         methods: {
             addItem() {
-
                 this.selectedFriendsIds.forEach(friendId => {
                         this.$apollo.mutate({
                             mutation: UPDATE_GROUP_MUTATION,
@@ -119,31 +117,19 @@
                                 id: this.groupId,
                                 addUserId: friendId,
                             },
-                            update: (store, { data: { updateGroup } }) => {
-                                const variables = { accessToken: getAccessToken(), id: updateGroup.id };
-                                const data = store.readQuery({
-                                    query: GET_GROUP_QUERY,
-                                    variables,
+                            update: updateGetGroupById('updateGroup', 'users'),
+                        })
+                            .then(() => {
+                                this.dialog = false;
+                                this.$emit('setSnackbar', {
+                                    message: 'User was added successfully!',
+                                    operationType: 'success',
                                 });
-
-                                data.groupById.users = updateGroup.users;
-
-                                store.writeQuery({
-                                    query: GET_GROUP_QUERY,
-                                    variables,
-                                    data,
-                                });
-                            },
-                        }).then((response) => {
-                            this.groupMembers = response.data.updateGroup.users;
-                            this.dialog = false;
-                            const snackbarAttributes = JSON.parse('{' + '"message"' + ':' + '"User was added successfully !", "operationType":' + '"success"}');
-                            this.$emit('setSnackbar', snackbarAttributes);
-
-                        }).catch((response) => {
-                            const snackbarAttributes = JSON.parse('{' + '"message"' + ':' + '"User cannot be added !", "operationType":' + '"error"}');
-                            this.$emit('setSnackbar', snackbarAttributes);
-                        });
+                            })
+                            .catch(() => this.$emit('setSnackbar', {
+                                message: 'User cannot be added!',
+                                operationType: 'error',
+                            }));
                     },
                 );
             },

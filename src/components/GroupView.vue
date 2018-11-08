@@ -7,28 +7,34 @@
                 <section title="People">
                     <v-subheader><h3>People</h3></v-subheader>
                     <v-divider></v-divider>
-                    <FriendsItemsBox :items="group.users"
-                                     :groupId="groupId"
-                                     @setSnackbar="setSnackAttributes($event)"
+                    <FriendsItemsBox
+                            :items="group.users"
+                            :groupId="groupId"
+                            @setSnackbar="setSnackAttributes($event)"
                     />
                 </section>
 
                 <section title="Expenses">
                     <v-subheader><h3>Expenses</h3></v-subheader>
                     <v-divider></v-divider>
-                    <ExpenseItemsBox :items="group.expenses" :usersIds="userIds"
-                                     :ownerId="group.owner.id"
-                                     :groupId="groupId"
-                                     @setSnackbar="setSnackAttributes($event)"/>
+                    <ExpenseItemsBox
+                            :items="group.expenses"
+                            :usersIds="userIds"
+                            :ownerId="group.owner.id"
+                            :groupId="groupId"
+                            @setSnackbar="setSnackAttributes($event)"
+                    />
                 </section>
 
                 <section title="Transactions">
                     <v-subheader><h3>Transactions</h3></v-subheader>
                     <v-divider></v-divider>
-                    <TransactionItemsBox :items="group.transactions"
-                                         :groupId="groupId"
-                                         :membersOfGroup="group.users"
-                                         @setSnackbar="setSnackAttributes($event)"/>
+                    <TransactionItemsBox
+                            :items="group.transactions"
+                            :groupId="groupId"
+                            :membersOfGroup="group.users"
+                            @setSnackbar="setSnackAttributes($event)"
+                    />
                 </section>
 
                 <v-snackbar
@@ -40,7 +46,6 @@
                 >
                     {{snackMessage}}
                     <v-btn
-
                             flat
                             @click="snackbar = false"
                     >
@@ -90,14 +95,16 @@
                 update: ({ groupById }) => groupById,
             },
         },
-        computed: {
-            groupId() {
-                return this.$route.params.groupId;
-            },
+        methods: {
             setSnackAttributes(snack) {
                 this.snackbar = true;
                 this.snackMessage = snack.message;
                 this.snackOperation = snack.operationType;
+            },
+        },
+        computed: {
+            groupId() {
+                return this.$route.params.groupId;
             },
             userIds() {
                 return this.group.users.map(({ id }) => id);

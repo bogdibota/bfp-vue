@@ -1,7 +1,7 @@
 <template>
     <div>
         <v-content>
-            <ItemsBox :items="expanses">
+            <ItemsBox :items="items">
                 <template slot="elementBox" slot-scope="props">
                     <v-icon>add_shopping_cart</v-icon>
                     {{props.item.name}}
@@ -11,13 +11,13 @@
                     <v-dialog v-model="dialog" width="500">
                         <div slot="activator">
                             <v-icon>add</v-icon>
-                            Add expanse
+                            Add expense
                         </div>
                         <v-card>
                             <v-card-title
                                     class="headline grey lighten-2"
                                     primary-title>
-                                Add expanse:
+                                Add expense:
                             </v-card-title>
                             <v-card-text>
                                 <v-form>
@@ -53,7 +53,7 @@
 </template>
 
 <script>
-    import { ADD_EXPENSE_MUTATION, GET_PERSONS_QUERY, UPDATE_GROUP_MUTATION } from '../apollo/graphql';
+    import { ADD_EXPENSE_MUTATION, updateGetGroupById } from '../apollo/graphql';
     import { getAccessToken } from '../lib/facebook';
     import ItemsBox from './ItemsBox';
 
@@ -63,16 +63,9 @@
             dialog: '',
             nameExpense: '',
             priceExpense: '',
-            stateOfExpanseOperation: '',
-            snackbar: '',
-            messageSnackbar: '',
-            expanses: [],
         }),
         components: {
             ItemsBox,
-        },
-        created() {
-            this.expanses = this.items;
         },
         methods: {
             addItem() {
@@ -86,17 +79,19 @@
                         name: this.nameExpense,
                         price: this.priceExpense,
                     },
-
-                }).then((response) => {
-                    this.expanses = response.data.addExpense.expenses;
-                    this.dialog = false;
-                    var snackbarAttributes = JSON.parse('{' + '"message"' + ':' + '"Expanse was added successfully !", "operationType":' + '"success"}');
-                    this.$emit('setSnackbar', snackbarAttributes);
-
-                }).catch((response) => {
-                    var snackbarAttributes = JSON.parse('{' + '"message"' + ':' + '"Expanse cannot be added !", "operationType":' + '"error"}');
-                    this.$emit('setSnackbar', snackbarAttributes);
-                });
+                    update: updateGetGroupById('addExpense', 'expenses'),
+                })
+                    .then(() => {
+                        this.dialog = false;
+                        this.$emit('setSnackbar', {
+                            message: 'Expense was added successfully!',
+                            operationType: 'success',
+                        });
+                    })
+                    .catch(() => this.$emit('setSnackbar', {
+                        message: 'Expense cannot be added!',
+                        operationType: 'error',
+                    }));
             },
         },
         props: ['items', 'groupId', 'usersIds', 'ownerId'],
