@@ -36,16 +36,16 @@
                                         <v-btn
                                                 color="primary"
                                                 flat
-                                                @click="dialog = false "
+                                                @click="addGroup()"
                                         >
-                                            Close
+                                            Add
                                         </v-btn>
                                         <v-btn
                                                 color="primary"
                                                 flat
-                                                @click="addGroup()"
+                                                @click="dialog = false "
                                         >
-                                            Add
+                                            Close
                                         </v-btn>
                                     </v-card-actions>
                                 </v-card>
@@ -55,6 +55,24 @@
                     </ul>
                 </div>
             </v-container>
+
+            <v-snackbar
+                    v-model="snackbar"
+                    bottom
+                    right
+                    :color="snackOperation"
+                    :timeout=4000
+            >
+                {{snackMessage}}
+                <v-btn
+
+                        flat
+                        @click="snackbar = false"
+                >
+                    Close
+                </v-btn>
+            </v-snackbar>
+
         </v-content>
     </v-app>
 </template>
@@ -132,7 +150,10 @@
             return {
                 myGroups: [],
                 dialog: '',
-                groupName:'',
+                groupName: '',
+                snackbar: false,
+                snackMessage: '',
+                snackOperation: '',
             };
         },
         apollo: {
@@ -145,7 +166,7 @@
         },
         methods: {
             navigate(to, groupId) {
-                this.$router.push({name: to, params: { groupId: groupId}});
+                this.$router.push({ name: to, params: { groupId: groupId } });
             },
             addGroup() {
                 this.$apollo.mutate({
@@ -176,12 +197,18 @@
                             name: this.groupName,
                             accessToken: getAccessToken(),
                         },
-
                     },
+
                 }).then((data) => {
+                    this.dialog = false;
+                    this.snackbar = true;
+                    this.snackOperation = 'success';
+                    this.snackMessage = 'Group added successfully !';
 
                 }).catch((error) => {
-                    console.error(error);
+                    this.snackbar = true;
+                    this.snackOperation = 'error';
+                    this.snackMessage = 'Group cannot be added !';
                 });
             },
         },

@@ -73,7 +73,6 @@
                                     Close
                                 </v-btn>
                             </v-card-actions>
-
                         </v-card>
                     </v-dialog>
                 </template>
@@ -96,7 +95,6 @@
             searchInput: '',
             name: '',
             groupMembers: [],
-
         }),
         created() {
             this.groupMembers = this.items;
@@ -117,6 +115,7 @@
                 });
             },
             addItem() {
+
                 this.selectedFriendsIds.forEach(friendId => {
                         this.$apollo.mutate({
                             mutation: UPDATE_GROUP_MUTATION,
@@ -125,8 +124,16 @@
                                 id: this.groupId,
                                 addUserId: friendId,
                             },
+
                         }).then((response) => {
                             this.groupMembers = response.data.updateGroup.users;
+                            this.dialog = false;
+                            var snackbarAttributes = JSON.parse('{' + '"message"' + ':' + '"User was added successfully !", "operationType":' + '"success"}');
+                            this.$emit('setSnackbar', snackbarAttributes);
+
+                        }).catch((response) => {
+                            var snackbarAttributes = JSON.parse('{' + '"message"' + ':' + '"User cannot be added !", "operationType":' + '"error"}');
+                            this.$emit('setSnackbar', snackbarAttributes);
                         });
                     },
                 );

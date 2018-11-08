@@ -1,7 +1,7 @@
 <template>
     <div>
         <v-content>
-            <ItemsBox :items="items">
+            <ItemsBox :items="transactions">
                 <template slot="elementBox" slot-scope="props">
                     <v-icon>account_balance</v-icon>
                     From:
@@ -49,7 +49,6 @@
                                         <template slot="selection" slot-scope="data">
                                             <v-chip
                                                     :selected="data.selected"
-                                                    close
                                                     class="chip--select-multi"
                                                     @input="data.parent.selectItem(data.item)"
                                             >
@@ -88,7 +87,6 @@
                                         <template slot="selection" slot-scope="data">
                                             <v-chip
                                                     :selected="data.selected"
-                                                    close
                                                     class="chip--select-multi"
                                                     @input="data.parent.selectItem(data.item)"
                                             >
@@ -164,7 +162,11 @@
             toId:'',
             commentTransaction: '',
             priceTransaction:'',
+            transactions:[]
         }),
+        created(){
+          this.transactions = this.items;
+        },
         components: {
           ItemsBox
         },
@@ -182,8 +184,14 @@
                     }
 
                 }).then((response) => {
-                    this.items = response.data.addTransaction.transactions;
-                    console.log(this.items)
+                    this.transactions = response.data.addTransaction.transactions;
+                    this.dialog = false;
+                    var snackbarAttributes = JSON.parse('{' + '"message"' + ':' + '"Transaction was added successfully !", "operationType":' + '"success"}');
+                    this.$emit('setSnackbar', snackbarAttributes);
+
+                }).catch((response) => {
+                    var snackbarAttributes = JSON.parse('{' + '"message"' + ':' + '"Transaction cannot be added !", "operationType":' + '"error"}');
+                    this.$emit('setSnackbar', snackbarAttributes);
                 })
             },
         },

@@ -1,7 +1,7 @@
 <template>
     <div>
         <v-content>
-            <ItemsBox :items="items">
+            <ItemsBox :items="expanses">
                 <template slot="elementBox" slot-scope="props">
                     <v-icon>add_shopping_cart</v-icon>
                     {{props.item.name}}
@@ -62,10 +62,17 @@
         data: () => ({
             dialog: '',
             nameExpense: '',
-            priceExpense:'',
+            priceExpense: '',
+            stateOfExpanseOperation: '',
+            snackbar: '',
+            messageSnackbar: '',
+            expanses: [],
         }),
         components: {
-          ItemsBox
+            ItemsBox,
+        },
+        created() {
+            this.expanses = this.items;
         },
         methods: {
             addItem() {
@@ -78,13 +85,21 @@
                         peopleIds: this.usersIds,
                         name: this.nameExpense,
                         price: this.priceExpense,
-                    }
+                    },
+
                 }).then((response) => {
-                    this.items = response.data.addExpense.expenses;
-                })
+                    this.expanses = response.data.addExpense.expenses;
+                    this.dialog = false;
+                    var snackbarAttributes = JSON.parse('{' + '"message"' + ':' + '"Expanse was added successfully !", "operationType":' + '"success"}');
+                    this.$emit('setSnackbar', snackbarAttributes);
+
+                }).catch((response) => {
+                    var snackbarAttributes = JSON.parse('{' + '"message"' + ':' + '"Expanse cannot be added !", "operationType":' + '"error"}');
+                    this.$emit('setSnackbar', snackbarAttributes);
+                });
             },
         },
-        props: ['items','groupId','usersIds','ownerId'],
+        props: ['items', 'groupId', 'usersIds', 'ownerId'],
     };
 </script>
 

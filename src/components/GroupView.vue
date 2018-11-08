@@ -6,23 +6,50 @@
                 <section title="People">
                     <v-subheader><h3>People</h3></v-subheader>
                     <v-divider></v-divider>
-                    <FriendsItemsBox :items="this.group.users" :groupId="this.groupId"/>
+                    <FriendsItemsBox :items="this.group.users"
+                                     :groupId="this.groupId"
+                                     @setSnackbar="setSnackAttributes($event)"
+                    />
                 </section>
 
                 <section title="Expenses">
                     <v-subheader><h3>Expenses</h3></v-subheader>
                     <v-divider></v-divider>
-                    <ExpenseItemsBox :items="this.group.expenses" :usersIds="getUsersIds()"
+                    <ExpenseItemsBox :items="this.group.expenses"
+                                     :usersIds="getUsersIds()"
                                      :ownerId="this.group.owner.id"
-                                     :groupId="this.groupId"/>
+                                     :groupId="this.groupId"
+                                     @setSnackbar="setSnackAttributes($event)"
+                    />
                 </section>
 
                 <section title="Transactions">
                     <v-subheader><h3>Transactions</h3></v-subheader>
                     <v-divider></v-divider>
-                    <TransactionItemsBox :items="this.group.transactions" :groupId="this.groupId"
-                                         :membersOfGroup="this.group.users"/>
+                    <TransactionItemsBox :items="this.group.transactions"
+                                         :groupId="this.groupId"
+                                         :membersOfGroup="this.group.users"
+                                         @setSnackbar="setSnackAttributes($event)"
+                    />
                 </section>
+
+                <v-snackbar
+                        v-model="snackbar"
+                        bottom
+                        right
+                        :color="snackOperation"
+                        :timeout=4000
+                >
+                    {{snackMessage}}
+                    <v-btn
+
+                            flat
+                            @click="snackbar = false"
+                    >
+                        Close
+                    </v-btn>
+                </v-snackbar>
+
             </v-container>
         </v-content>
     </v-app>
@@ -45,6 +72,9 @@
                 groupId: '',
                 group: '',
                 ids: [],
+                snackMessage: '',
+                snackOperation: '',
+                snackbar: false,
             };
         },
         created() {
@@ -76,6 +106,11 @@
                 });
 
                 return ids;
+            },
+            setSnackAttributes(snack) {
+                this.snackbar = true;
+                this.snackMessage = snack.message;
+                this.snackOperation = snack.operationType;
             },
         },
     };
