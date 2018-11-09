@@ -8,18 +8,13 @@
 
         <ul class="flex-container">
             <li class="flex-item">
-                    <slot name="addElementBox"></slot>
+                <slot name="addElementBox"></slot>
             </li>
         </ul>
     </div>
 </template>
 
-
 <script>
-    import Vue from 'vue';
-    import { GET_PERSONS_QUERY, UPDATE_GROUP_MUTATION } from '../apollo/graphql';
-    import { getAccessToken } from '../lib/facebook';
-
     export default {
         name: 'items-box',
         props: ['items'],
@@ -27,7 +22,6 @@
 </script>
 
 <style scoped>
-
     .flex-container {
         padding: 0;
         margin: 0;
@@ -46,7 +40,6 @@
         margin: 10px;
         line-height: 150px;
         color: white;
-        /*font-weight: bold;*/
         font-size: 20px;
         text-align: center;
         white-space: nowrap;
@@ -58,5 +51,4 @@
         background: darkblue;
         cursor: pointer
     }
-
 </style>

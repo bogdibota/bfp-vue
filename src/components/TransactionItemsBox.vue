@@ -37,7 +37,7 @@
                                 Add transaction:
                             </v-card-title>
                             <v-card-text>
-                                <v-flex >
+                                <v-flex>
                                     <v-select
                                             :items="this.membersOfGroup"
                                             v-model="fromId"
@@ -51,7 +51,6 @@
                                         <template slot="selection" slot-scope="data">
                                             <v-chip
                                                     :selected="data.selected"
-                                                    close
                                                     class="chip--select-multi"
                                                     @input="data.parent.selectItem(data.item)"
                                             >
@@ -80,7 +79,7 @@
                             </v-card-text>
 
                             <v-card-text>
-                                <v-flex >
+                                <v-flex>
                                     <v-select
                                             :items="this.membersOfGroup"
                                             v-model="toId"
@@ -94,7 +93,6 @@
                                         <template slot="selection" slot-scope="data">
                                             <v-chip
                                                     :selected="data.selected"
-                                                    close
                                                     class="chip--select-multi"
                                                     @input="data.parent.selectItem(data.item)"
                                             >
@@ -156,13 +154,7 @@
 </template>
 
 <script>
-    import Vue from 'vue';
-    import {
-        ADD_EXPENSE_MUTATION,
-        ADD_TRANSACTION_MUTATION,
-        GET_PERSONS_QUERY,
-        UPDATE_GROUP_MUTATION,
-    } from '../apollo/graphql';
+    import { ADD_TRANSACTION_MUTATION, updateGetGroupById } from '../apollo/graphql';
     import { getAccessToken } from '../lib/facebook';
     import ItemsBox from './ItemsBox';
 
@@ -170,13 +162,13 @@
         name: 'items-box',
         data: () => ({
             dialog: '',
-            fromId:'',
-            toId:'',
+            fromId: '',
+            toId: '',
             commentTransaction: '',
-            priceTransaction:'',
+            priceTransaction: '',
         }),
         components: {
-          ItemsBox
+            ItemsBox,
         },
         methods: {
             addItem() {
@@ -189,14 +181,22 @@
                         toId: this.toId,
                         comment: this.commentTransaction,
                         price: this.priceTransaction,
-                    }
-
-                }).then((response) => {
-                    this.items = response.data.addTransaction.transactions;
-                    console.log(this.items)
+                    },
+                    update: updateGetGroupById('addTransaction', 'transactions'),
                 })
+                    .then(() => {
+                        this.dialog = false;
+                        this.$emit('setSnackbar', {
+                            message: 'Transaction was added successfully!',
+                            operationType: 'success',
+                        });
+                    })
+                    .catch(() => this.$emit('setSnackbar', {
+                        message: 'Transaction cannot be added!',
+                        operationType: 'error',
+                    }));
             },
         },
-        props: ['items','groupId','membersOfGroup'],
+        props: ['items', 'groupId', 'membersOfGroup'],
     };
 </script>
