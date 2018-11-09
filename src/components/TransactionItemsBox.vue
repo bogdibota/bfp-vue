@@ -6,19 +6,11 @@
                     <v-icon>account_balance</v-icon>
                     From:
                     <v-avatar size="30px">
-                        <img
-                                v-if="props.item.from.avatar"
-                                :src="props.item.from.avatar"
-                                alt="Avatar"
-                        >
+                        <ImageOrIcon :imageUrl="props.item.from.avatar"></ImageOrIcon>
                     </v-avatar>
                     To:
                     <v-avatar size="30px">
-                        <img
-                                v-if="props.item.to.avatar"
-                                :src="props.item.to.avatar"
-                                alt="Avatar"
-                        >
+                        <ImageOrIcon :imageUrl="props.item.to.avatar"></ImageOrIcon>
                     </v-avatar>
                 </template>
 
@@ -53,20 +45,21 @@
                                                     @input="data.parent.selectItem(data.item)"
                                             >
                                                 <v-avatar>
-                                                    <img :src="data.item.avatar">
+                                                    <ImageOrIcon :imageUrl="data.item.avatar"></ImageOrIcon>
                                                 </v-avatar>
+
                                                 {{ data.item.name }}
                                             </v-chip>
                                         </template>
                                         <template slot="item" slot-scope="data">
-                                            <v-list-tile-avatar>
-                                                <img :src="data.item.avatar">
-                                            </v-list-tile-avatar>
-                                            <v-list-tile-content>
-                                                <v-list-tile-title v-html="data.item.name"></v-list-tile-title>
-                                                <v-list-tile-sub-title
-                                                        v-html="data.item.group"></v-list-tile-sub-title>
-                                            </v-list-tile-content>
+                                                <v-list-tile-avatar>
+                                                    <ImageOrIcon :imageUrl="data.item.avatar"></ImageOrIcon>
+                                                </v-list-tile-avatar>
+                                                <v-list-tile-content>
+                                                    <v-list-tile-title v-html="data.item.name"></v-list-tile-title>
+                                                    <v-list-tile-sub-title
+                                                            v-html="data.item.group"></v-list-tile-sub-title>
+                                                </v-list-tile-content>
                                         </template>
                                     </v-select>
                                 </v-flex>
@@ -91,20 +84,20 @@
                                                     @input="data.parent.selectItem(data.item)"
                                             >
                                                 <v-avatar>
-                                                    <img :src="data.item.avatar">
+                                                    <ImageOrIcon :imageUrl="data.item.avatar"></ImageOrIcon>
                                                 </v-avatar>
                                                 {{ data.item.name }}
                                             </v-chip>
                                         </template>
                                         <template slot="item" slot-scope="data">
-                                            <v-list-tile-avatar>
-                                                <img :src="data.item.avatar">
-                                            </v-list-tile-avatar>
-                                            <v-list-tile-content>
-                                                <v-list-tile-title v-html="data.item.name"></v-list-tile-title>
-                                                <v-list-tile-sub-title
-                                                        v-html="data.item.group"></v-list-tile-sub-title>
-                                            </v-list-tile-content>
+                                                <v-list-tile-avatar>
+                                                    <ImageOrIcon :imageUrl="data.item.avatar"></ImageOrIcon>
+                                                </v-list-tile-avatar>
+                                                <v-list-tile-content>
+                                                    <v-list-tile-title v-html="data.item.name"></v-list-tile-title>
+                                                    <v-list-tile-sub-title
+                                                            v-html="data.item.group"></v-list-tile-sub-title>
+                                                </v-list-tile-content>
                                         </template>
                                     </v-select>
                                 </v-flex>
@@ -147,6 +140,7 @@
     import { ADD_TRANSACTION_MUTATION, updateGetGroupById } from '../apollo/graphql';
     import { getAccessToken } from '../lib/facebook';
     import ItemsBox from './ItemsBox';
+    import ImageOrIcon from './ImageOrIcon';
 
     export default {
         name: 'items-box',
@@ -158,7 +152,7 @@
             priceTransaction: '',
         }),
         components: {
-            ItemsBox,
+            ItemsBox, ImageOrIcon
         },
         methods: {
             addItem() {
