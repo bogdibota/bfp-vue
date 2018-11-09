@@ -15,7 +15,7 @@
                                 <template v-for="userStatus in  usersStatuses">
                                     <v-list-tile v-if="userStatus.status<0">
                                         <v-list-tile-avatar>
-                                            <img :src="userStatus.user.avatar">
+                                            <ImageOrIcon :imageUrl="userStatus.user.avatar"/>
                                         </v-list-tile-avatar>
 
                                         <v-list-tile-content>
@@ -34,7 +34,7 @@
                                 <template v-for="(userStatus, index) in  usersStatuses">
                                     <v-list-tile v-if="userStatus.status>0">
                                         <v-list-tile-avatar>
-                                            <img :src="userStatus.user.avatar">
+                                            <ImageOrIcon :imageUrl="userStatus.user.avatar"/>
                                         </v-list-tile-avatar>
 
                                         <v-list-tile-content>
@@ -73,6 +73,7 @@
 </template>
 
 <script>
+    import ImageOrIcon from './ImageOrIcon';
     import { MAKE_MAGIC_QUERY } from '../apollo/graphql';
     import { getAccessToken } from '../lib/facebook';
 
@@ -85,6 +86,9 @@
                 usersStatuses: [],
                 showProtip: true,
             };
+        },
+        components: {
+            ImageOrIcon
         },
         methods: {
             makeMagic() {
