@@ -4,11 +4,7 @@
             <ItemsBox :items="items">
                 <template slot="elementBox" slot-scope="props">
                     <v-avatar size="45px">
-                        <img
-                                v-if="props.item.avatar"
-                                :src="props.item.avatar"
-                                alt="Avatar"
-                        >
+                        <ImageOrIcon :imageUrl="props.item.avatar"></ImageOrIcon>
                     </v-avatar>
                     {{props.item.name}}
                 </template>
@@ -48,14 +44,14 @@
                                                     @input="data.parent.selectItem(data.item)"
                                             >
                                                 <v-avatar>
-                                                    <img :src="data.item.avatar">
+                                                    <ImageOrIcon :imageUrl="data.item.avatar"></ImageOrIcon>
                                                 </v-avatar>
                                                 {{ data.item.name }}
                                             </v-chip>
                                         </template>
                                         <template slot="item" slot-scope="data">
                                             <v-list-tile-avatar>
-                                                <img :src="data.item.avatar">
+                                                <ImageOrIcon :imageUrl="data.item.avatar"></ImageOrIcon>
                                             </v-list-tile-avatar>
                                             <v-list-tile-content>
                                                 <v-list-tile-title v-html="data.item.name"></v-list-tile-title>
@@ -85,6 +81,7 @@
     import { GET_PERSONS_QUERY, UPDATE_GROUP_MUTATION, updateGetGroupById } from '../apollo/graphql';
     import { getAccessToken } from '../lib/facebook';
     import ItemsBox from './ItemsBox';
+    import ImageOrIcon from './ImageOrIcon';
 
     export default {
         name: 'items-box',
@@ -105,7 +102,7 @@
             },
         },
         components: {
-            ItemsBox,
+            ItemsBox, ImageOrIcon
         },
         methods: {
             addItem() {
