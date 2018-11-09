@@ -6,21 +6,11 @@
                     <v-icon>account_balance</v-icon>
                     From:
                     <v-avatar size="30px">
-                        <img
-                                v-if="!props.item.to.avatar.includes('scontent')"
-                                :src="props.item.from.avatar"
-                                alt="Avatar"
-                        >
-                        <v-icon v-else>person</v-icon>
+                        <ImageOrIcon :imageUrl="props.item.from.avatar"></ImageOrIcon>
                     </v-avatar>
                     To:
                     <v-avatar size="30px">
-                        <img
-                                v-if="!props.item.to.avatar.includes('scontent')"
-                                :src="props.item.to.avatar"
-                                alt="Avatar"
-                        >
-                        <v-icon v-else>person</v-icon>
+                        <ImageOrIcon :imageUrl="props.item.to.avatar"></ImageOrIcon>
                     </v-avatar>
                 </template>
 
@@ -55,8 +45,7 @@
                                                     @input="data.parent.selectItem(data.item)"
                                             >
                                                 <v-avatar>
-                                                    <img v-if="!data.item.avatar.includes('scontent')" :src="data.item.avatar">
-                                                    <v-icon>person</v-icon>
+                                                    <ImageOrIcon :imageUrl="data.item.avatar"></ImageOrIcon>
                                                 </v-avatar>
 
                                                 {{ data.item.name }}
@@ -64,9 +53,7 @@
                                         </template>
                                         <template slot="item" slot-scope="data">
                                                 <v-list-tile-avatar>
-                                                    <img v-if="!data.item.avatar.includes('scontent')"
-                                                         :src="data.item.avatar">
-                                                    <v-icon v-else>person</v-icon>
+                                                    <ImageOrIcon :imageUrl="data.item.avatar"></ImageOrIcon>
                                                 </v-list-tile-avatar>
                                                 <v-list-tile-content>
                                                     <v-list-tile-title v-html="data.item.name"></v-list-tile-title>
@@ -97,18 +84,14 @@
                                                     @input="data.parent.selectItem(data.item)"
                                             >
                                                 <v-avatar>
-                                                    <img v-if="!data.item.avatar.includes('scontent')"
-                                                         :src="data.item.avatar">
-                                                    <v-icon v-else>person</v-icon>
+                                                    <ImageOrIcon :imageUrl="data.item.avatar"></ImageOrIcon>
                                                 </v-avatar>
                                                 {{ data.item.name }}
                                             </v-chip>
                                         </template>
                                         <template slot="item" slot-scope="data">
                                                 <v-list-tile-avatar>
-                                                    <img v-if="!data.item.avatar.includes('scontent')"
-                                                         :src="data.item.avatar">
-                                                    <v-icon v-else>person</v-icon>
+                                                    <ImageOrIcon :imageUrl="data.item.avatar"></ImageOrIcon>
                                                 </v-list-tile-avatar>
                                                 <v-list-tile-content>
                                                     <v-list-tile-title v-html="data.item.name"></v-list-tile-title>
@@ -157,6 +140,7 @@
     import { ADD_TRANSACTION_MUTATION, updateGetGroupById } from '../apollo/graphql';
     import { getAccessToken } from '../lib/facebook';
     import ItemsBox from './ItemsBox';
+    import ImageOrIcon from './ImageOrIcon';
 
     export default {
         name: 'items-box',
@@ -168,7 +152,7 @@
             priceTransaction: '',
         }),
         components: {
-            ItemsBox,
+            ItemsBox, ImageOrIcon
         },
         methods: {
             addItem() {
