@@ -3,12 +3,14 @@
         <v-content>
             <ItemsBox :items="items">
                 <template slot="elementBox" slot-scope="props">
+
                     <v-avatar size="45px">
                         <img
-                                v-if="props.item.avatar"
+                                v-if="!props.item.avatar.includes('scontent')"
                                 :src="props.item.avatar"
                                 alt="Avatar"
                         >
+                        <v-icon v-else>person</v-icon>
                     </v-avatar>
                     {{props.item.name}}
                 </template>
@@ -48,14 +50,18 @@
                                                     @input="data.parent.selectItem(data.item)"
                                             >
                                                 <v-avatar>
-                                                    <img :src="data.item.avatar">
+                                                    <img v-if="!data.item.avatar.includes('scontent')"
+                                                         :src="data.item.avatar">
+                                                    <v-icon v-else>person</v-icon>
                                                 </v-avatar>
                                                 {{ data.item.name }}
                                             </v-chip>
                                         </template>
                                         <template slot="item" slot-scope="data">
                                             <v-list-tile-avatar>
-                                                <img :src="data.item.avatar">
+                                                <img v-if="!data.item.avatar.includes('scontent')"
+                                                     :src="data.item.avatar">
+                                                <v-icon v-else>person</v-icon>
                                             </v-list-tile-avatar>
                                             <v-list-tile-content>
                                                 <v-list-tile-title v-html="data.item.name"></v-list-tile-title>
@@ -103,6 +109,7 @@
                     accessToken: getAccessToken(),
                 },
                 update: ({myFriends}) => myFriends,
+
             },
         },
         components: {
