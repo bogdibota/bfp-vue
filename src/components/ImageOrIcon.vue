@@ -1,12 +1,10 @@
 <template>
-    <div>
         <img
                 v-if="!imageUrl.includes('scontent')"
                 :src="imageUrl"
                 alt="Avatar"
         >
         <v-icon v-else>person</v-icon>
-    </div>
 </template>
 
 <script>
