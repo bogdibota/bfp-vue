@@ -143,3 +143,21 @@ export const ADD_TRANSACTION_MUTATION = gql`
         }
     }
 `;
+
+export const MAKE_MAGIC_QUERY = gql`
+    query makeMagic($accessToken: String!, $groupId: String!) {
+        makeMagic(
+            accessToken: $accessToken,
+            groupId: $groupId
+        ) {
+            pool {
+                user {
+                    id
+                    name
+                    avatar
+                }          
+                status
+            }
+           }
+    }
+`;

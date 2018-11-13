@@ -4,6 +4,8 @@
             <v-container fluid v-if="!$apollo.queries.group.loading">
                 <Header :headerTitle="group.name"/>
 
+                <MakeMagic :groupId="group.id"/>
+
                 <section title="People">
                     <v-subheader><h3>People</h3></v-subheader>
                     <v-divider></v-divider>
@@ -64,6 +66,7 @@
     import TransactionItemsBox from './TransactionItemsBox';
     import FriendsItemsBox from './FriendsItemsBox';
     import ExpenseItemsBox from './ExpenseItemsBox';
+    import MakeMagic from './MakeMagic';
     import { GET_GROUP_QUERY } from '../apollo/graphql';
     import { getAccessToken } from '../lib/facebook';
 
@@ -74,6 +77,7 @@
             TransactionItemsBox,
             FriendsItemsBox,
             ExpenseItemsBox,
+            MakeMagic,
         },
         data() {
             return {
