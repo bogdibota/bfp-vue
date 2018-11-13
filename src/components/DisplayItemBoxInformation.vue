@@ -19,22 +19,22 @@
                             <v-list-tile-sub-title v-html="field.displayText"></v-list-tile-sub-title>
                         </v-list-tile-content>
 
-                        <v-list-tile-content v-if="field.type==='date'">
+                        <v-list-tile-content v-else-if="field.type==='date'">
                             <v-list-tile-title v-html="field.fieldName"></v-list-tile-title>
                             <v-list-tile-sub-title v-html="getDate(field.displayText)"></v-list-tile-sub-title>
                         </v-list-tile-content>
 
-                        <v-list-tile-content v-if="field.type==='avatar'">
+                        <v-list-tile-content class="avatar" v-else-if="field.type==='avatar'">
                             <v-list-tile-title v-html="field.fieldName"></v-list-tile-title>
                             <UserCard :user="field.displayText"></UserCard>
                         </v-list-tile-content>
 
-                        <v-list-tile-content v-if="field.type==='avatarList'">
+                        <v-list-tile-content v-else-if="field.type==='avatarList'">
                             <v-list-tile-title v-html="field.fieldName"></v-list-tile-title>
                             <v-list-tile-sub-title>
                                 <v-container fluid grid-list-md>
                                     <v-layout row wrap>
-                                        <v-avatar v-for="user in field.displayText" class="avatars">
+                                        <v-avatar v-for="user in field.displayText" class="avatarList">
                                             <v-flex d-flex xs3 sm3 md2>
                                                 <ImageOrIcon :imageUrl="user.avatar"></ImageOrIcon>
                                             </v-flex>
@@ -43,10 +43,10 @@
                                 </v-container>
                             </v-list-tile-sub-title>
                         </v-list-tile-content>
-
                     </div>
                     <v-divider></v-divider>
                 </template>
+
             </v-list>
 
             <v-card-actions>
@@ -89,12 +89,11 @@
         margin: 20px;
     }
 
-    .avatars {
+    .avatarList {
         margin: 2px;
     }
 
-    .fluid {
-        padding: 5px;
+    .avatar {
+        align-items: center;
     }
-
 </style>

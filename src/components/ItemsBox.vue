@@ -45,6 +45,7 @@
                 displayFields.push(this.displayField('Date', item.date, 'date'));
                 displayFields.push(this.displayField('Price', item.price, 'string'));
                 displayFields.push(this.displayField('Payer', item.payer, 'avatar'));
+
                 const field = {};
                 field.fieldName = 'People';
                 field.displayText = item.people.slice();
@@ -55,16 +56,17 @@
             },
             displayFieldsTransaction(item) {
                 const displayFields = [];
-                displayFields.push(this.displayField('Comment',item.comment,'string'));
-                displayFields.push(this.displayField('Price',item.price,'string'));
-                displayFields.push(this.displayField('From: ',item.from,'avatar'));
-                displayFields.push(this.displayField('To: ',item.to,'avatar'));
+                displayFields.push(this.displayField('Comment', item.comment, 'string'));
+                displayFields.push(this.displayField('Price', item.price, 'string'));
+                displayFields.push(this.displayField('From: ', item.from, 'avatar'));
+                displayFields.push(this.displayField('To: ', item.to, 'avatar'));
 
                 return displayFields;
             },
             displayFieldsUser(item) {
                 const displayFields = [];
-                displayFields.push(this.displayField(null,item,'avatar'));
+                displayFields.push(this.displayField(null, item, 'avatar'));
+
                 return displayFields;
             },
             displayField(fieldName, displayText, type) {
