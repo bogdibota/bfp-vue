@@ -15,26 +15,27 @@
                 <template v-for="field in displayInformation">
                     <div class="content">
                         <v-list-tile-content v-if="field.type==='string'">
-                            <v-list-tile-title v-html="field.fieldName"></v-list-tile-title>
-                            <v-list-tile-sub-title v-html="field.displayText"></v-list-tile-sub-title>
+                            <v-list-tile-title v-html="field.displayText"></v-list-tile-title>
+                            <v-list-tile-sub-title v-html="item[field.fieldName]"></v-list-tile-sub-title>
                         </v-list-tile-content>
 
                         <v-list-tile-content v-else-if="field.type==='date'">
-                            <v-list-tile-title v-html="field.fieldName"></v-list-tile-title>
-                            <v-list-tile-sub-title v-html="getDate(field.displayText)"></v-list-tile-sub-title>
+                            <v-list-tile-title v-html="field.displayText"></v-list-tile-title>
+                            <v-list-tile-sub-title v-html="getDate(item[field.fieldName])"></v-list-tile-sub-title>
                         </v-list-tile-content>
 
                         <v-list-tile-content class="avatar" v-else-if="field.type==='avatar'">
-                            <v-list-tile-title v-html="field.fieldName"></v-list-tile-title>
-                            <UserCard :user="field.displayText"></UserCard>
+                            <v-list-tile-title v-html="field.displayText"></v-list-tile-title>
+                            <UserCard v-if="field.fieldName" :user="item[field.fieldName]"></UserCard>
+                            <UserCard v-else :user="item"></UserCard>
                         </v-list-tile-content>
 
                         <v-list-tile-content v-else-if="field.type==='avatarList'">
-                            <v-list-tile-title v-html="field.fieldName"></v-list-tile-title>
+                            <v-list-tile-title v-html="field.displayText"></v-list-tile-title>
                             <v-list-tile-sub-title>
                                 <v-container fluid grid-list-md>
                                     <v-layout row wrap>
-                                        <v-avatar v-for="user in field.displayText" class="avatarList">
+                                        <v-avatar v-for="user in item[field.fieldName]" class="avatarList">
                                             <v-flex d-flex xs3 sm3 md2>
                                                 <ImageOrIcon :imageUrl="user.avatar"></ImageOrIcon>
                                             </v-flex>

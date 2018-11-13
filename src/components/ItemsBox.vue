@@ -31,51 +31,45 @@
         methods: {
             displayFields(item) {
                 if (item.__typename == 'Expense')
-                    return this.displayFieldsExpanse(item);
+                    return this.displayFieldsExpanse();
                 else if (item.__typename === 'Transaction')
-                    return this.displayFieldsTransaction(item);
+                    return this.displayFieldsTransaction();
                 else if (item.__typename === 'User')
-                    return this.displayFieldsUser(item);
+                    return this.displayFieldsUser();
 
             },
             displayFieldsExpanse(item) {
-                const displayFields = [];
-
-                displayFields.push(this.displayField('Name', item.name, 'string'));
-                displayFields.push(this.displayField('Date', item.date, 'date'));
-                displayFields.push(this.displayField('Price', item.price, 'string'));
-                displayFields.push(this.displayField('Payer', item.payer, 'avatar'));
-
-                const field = {};
-                field.fieldName = 'People';
-                field.displayText = item.people.slice();
-                field.type = 'avatarList';
-                displayFields.push(field);
-
-                return displayFields;
+                return [
+                    this.displayField('Name', 'name', 'string'),
+                    this.displayField('Date', 'date', 'date'),
+                    this.displayField('Price', 'price', 'string'),
+                    this.displayField('Payer', 'payer', 'avatar'),
+                    {
+                        fieldName: 'people',
+                        displayText:'People',
+                        type: 'avatarList'
+                    }
+                ]
             },
-            displayFieldsTransaction(item) {
-                const displayFields = [];
-                displayFields.push(this.displayField('Comment', item.comment, 'string'));
-                displayFields.push(this.displayField('Price', item.price, 'string'));
-                displayFields.push(this.displayField('From: ', item.from, 'avatar'));
-                displayFields.push(this.displayField('To: ', item.to, 'avatar'));
-
-                return displayFields;
+            displayFieldsTransaction() {
+                return [
+                    this.displayField('Comment', 'comment', 'string'),
+                    this.displayField('Price', 'price', 'string'),
+                    this.displayField('From:', 'from', 'avatar'),
+                    this.displayField('To:', 'to', 'avatar')
+                ]
             },
-            displayFieldsUser(item) {
-                const displayFields = [];
-                displayFields.push(this.displayField(null, item, 'avatar'));
-
-                return displayFields;
+            displayFieldsUser() {
+                return [
+                    this.displayField(null,null, 'avatar')
+                ];
             },
-            displayField(fieldName, displayText, type) {
-                const field = {};
-                field.fieldName = fieldName;
-                field.type = type;
-                field.displayText = displayText;
-
-                return field;
+            displayField(displayText, fieldName, type) {
+                return {
+                    'displayText': displayText,
+                    'fieldName': fieldName,
+                    'type': type
+                };
             },
         },
 
