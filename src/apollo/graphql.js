@@ -11,6 +11,15 @@ const groupFields = `
     expenses {
         name
         price
+        date
+        payer {
+            name
+            avatar
+        }
+        people {
+            name
+            avatar
+        }
     }
     transactions {
         from {
