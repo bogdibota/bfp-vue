@@ -35,6 +35,45 @@
                                 </v-form>
                             </v-card-text>
 
+                            <v-card-text>
+                                <v-flex>
+                                    <v-select
+                                            :items="this.membersOfGroup"
+                                            v-model="selectedFriendsIds"
+                                            label="Select"
+                                            item-text="name"
+                                            item-value="id"
+                                            multiple
+                                            chips
+                                            max-height="auto"
+                                            autocomplete
+                                            size="2"
+                                    >
+                                        <template slot="selection" slot-scope="data">
+                                            <v-chip
+                                                    :selected="data.selected"
+                                                    close
+                                                    class="chip--select-multi"
+                                                    @input="data.parent.selectItem(data.item)"
+                                            >
+                                                <v-avatar>
+                                                    <ImageOrIcon :imageUrl="data.item.avatar"></ImageOrIcon>
+                                                </v-avatar>
+                                                {{ data.item.name }}
+                                            </v-chip>
+                                        </template>
+                                        <template slot="item" slot-scope="data">
+                                            <v-list-tile-avatar>
+                                                <ImageOrIcon :imageUrl="data.item.avatar"></ImageOrIcon>
+                                            </v-list-tile-avatar>
+                                            <v-list-tile-content>
+                                                <v-list-tile-title v-html="data.item.name"></v-list-tile-title>
+                                            </v-list-tile-content>
+                                        </template>
+                                    </v-select>
+                                </v-flex>
+                            </v-card-text>
+
                             <v-card-actions>
                                 <v-spacer></v-spacer>
                                 <v-btn color="primary" flat @click="addItem()">
@@ -56,6 +95,7 @@
     import { ADD_EXPENSE_MUTATION, updateGetGroupById } from '../apollo/graphql';
     import { getAccessToken } from '../lib/facebook';
     import ItemsBox from './ItemsBox';
+    import ImageOrIcon from './ImageOrIcon';
 
     export default {
         name: 'items-box',
@@ -63,9 +103,10 @@
             dialog: '',
             nameExpense: '',
             priceExpense: '',
+            selectedFriendsIds:[]
         }),
         components: {
-            ItemsBox,
+            ItemsBox, ImageOrIcon
         },
         methods: {
             addItem() {
@@ -75,7 +116,7 @@
                         accessToken: getAccessToken(),
                         groupId: this.groupId,
                         payerId: this.ownerId,
-                        peopleIds: this.usersIds,
+                        peopleIds: this.selectedFriendsIds,
                         name: this.nameExpense,
                         price: this.priceExpense,
                     },
@@ -94,7 +135,7 @@
                     }));
             },
         },
-        props: ['items', 'groupId', 'usersIds', 'ownerId'],
+        props: ['items', 'groupId', 'ownerId', 'membersOfGroup'],
     };
 </script>
 

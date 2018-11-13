@@ -21,9 +21,9 @@
                     <v-divider></v-divider>
                     <ExpenseItemsBox
                             :items="group.expenses"
-                            :usersIds="userIds"
                             :ownerId="group.owner.id"
                             :groupId="groupId"
+                            :membersOfGroup="group.users"
                             @setSnackbar="setSnackAttributes($event)"
                     />
                 </section>
