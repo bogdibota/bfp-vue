@@ -4,6 +4,8 @@
             <li class="flex-item wrapper">
                 <slot name="elementBox" :item="item"></slot>
             </li>
+            <DisplayItemBoxInformation class="information" :item="item"
+                                       :displayInformation="displayFields(item)"></DisplayItemBoxInformation>
         </ul>
 
         <ul class="flex-container">
@@ -15,14 +17,68 @@
 </template>
 
 <script>
+    import DisplayItemBoxInformation from './DisplayItemBoxInformation';
+
     export default {
         name: 'items-box',
         props: ['items'],
+        components: {
+            DisplayItemBoxInformation,
+        },
+        data: () => ({
+            dialogProp: false,
+        }),
+        methods: {
+            displayFields(item) {
+                if (item.__typename == 'Expense')
+                    return this.displayFieldsExpanse();
+                else if (item.__typename === 'Transaction')
+                    return this.displayFieldsTransaction();
+                else if (item.__typename === 'User')
+                    return this.displayFieldsUser();
+
+            },
+            displayFieldsExpanse(item) {
+                return [
+                    this.displayField('Name', 'name', 'string'),
+                    this.displayField('Date', 'date', 'date'),
+                    this.displayField('Price', 'price', 'string'),
+                    this.displayField('Payer', 'payer', 'avatar'),
+                    {
+                        fieldName: 'people',
+                        displayText:'People',
+                        type: 'avatarList'
+                    }
+                ]
+            },
+            displayFieldsTransaction() {
+                return [
+                    this.displayField('Comment', 'comment', 'string'),
+                    this.displayField('Price', 'price', 'string'),
+                    this.displayField('From:', 'from', 'avatar'),
+                    this.displayField('To:', 'to', 'avatar')
+                ]
+            },
+            displayFieldsUser() {
+                return [
+                    this.displayField(null,null, 'avatar')
+                ];
+            },
+            displayField(displayText, fieldName, type) {
+                return {
+                    'displayText': displayText,
+                    'fieldName': fieldName,
+                    'type': type
+                };
+            },
+        },
+
     };
 </script>
 
 <style scoped>
     .flex-container {
+        position: relative;
         padding: 0;
         margin: 0;
         list-style: none;
@@ -50,5 +106,11 @@
     .flex-item:hover {
         background: darkblue;
         cursor: pointer
+    }
+
+    .information {
+        position: absolute;
+        bottom: 20px;
+        right: 20px;
     }
 </style>
