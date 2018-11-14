@@ -4,7 +4,7 @@
             Delete group
         </v-btn>
 
-        <v-dialog v-model="dialogDelete" max-width="290">
+        <v-dialog v-model="dialogDelete" max-width="500">
             <v-card>
                 <v-card-title class="headline">Are you sure you want to delete the group ?</v-card-title>
 
@@ -61,7 +61,7 @@
         DELETE_GROUP_MUTATION,
         UPDATE_GROUP_MUTATION,
         updateGetGroupById,
-        updateGetAllGroups,
+        updateGetAllGroups, ALL_GROUPS_QUERY,
     } from '../apollo/graphql';
     import { getAccessToken } from '../lib/facebook';
 
@@ -74,7 +74,7 @@
                 newGroupName: this.oldGroupName,
             };
         },
-        props: ['groupId', 'index', 'oldGroupName'],
+        props: ['groupId', 'oldGroupName'],
         methods: {
             deleteGroup() {
                 this.$apollo.mutate({
@@ -83,7 +83,21 @@
                         accessToken: getAccessToken(),
                         groupId: this.groupId,
                     },
-                    update: updateGetAllGroups('removeGroup', this.index),
+                    update: (store) => {
+                        const variables = { accessToken: getAccessToken() };
+                        const cachedData = store.readQuery({
+                            query: ALL_GROUPS_QUERY,
+                            variables,
+                        });
+
+                        cachedData.myGroups = cachedData.myGroups.filter(({ id }) => id !== this.groupId);
+
+                        store.writeQuery({
+                            query: ALL_GROUPS_QUERY,
+                            variables,
+                            data: cachedData,
+                        });
+                    },
                 })
                     .then(() => {
                         this.$router.push({ name: 'groups' });

@@ -50,22 +50,6 @@ export const ALL_GROUPS_QUERY = gql`
 `;
 
 
-export const updateGetAllGroups = (mutationName, groupIndex) => (store, { data }) => {
-    const variables = { accessToken: getAccessToken() };
-    const cachedData = store.readQuery({
-        query: ALL_GROUPS_QUERY,
-        variables,
-    });
-
-    cachedData.myGroups.splice(groupIndex, 1);
-
-    store.writeQuery({
-        query: ALL_GROUPS_QUERY,
-        variables,
-        data: cachedData,
-    });
-};
-
 export const GET_PERSONS_QUERY = gql`
     query myFriends($accessToken: String!, $excludeGroupId:String) {
         myFriends(accessToken: $accessToken, excludeGroupId: $excludeGroupId) {

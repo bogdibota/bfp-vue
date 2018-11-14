@@ -43,7 +43,6 @@
                     <v-subheader><h3>Administrator operations</h3></v-subheader>
                     <v-divider/>
                     <AdminSection :groupId="groupId"
-                                  :index="this.$route.params.index"
                                   :oldGroupName="group.name"
                                   @setSnackbar="setSnackAttributes($event)"
                     />
@@ -89,7 +88,7 @@
             FriendsItemsBox,
             ExpenseItemsBox,
             MakeMagic,
-            AdminSection
+            AdminSection,
         },
         data() {
             return {
