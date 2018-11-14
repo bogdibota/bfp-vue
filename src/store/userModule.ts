@@ -2,6 +2,7 @@ import apolloProvider from '../apollo';
 import gql from 'graphql-tag';
 
 const initialState = {
+    userId: null,
     accessToken: null,
     name: 'Your name here',
     avatar: null,
@@ -18,6 +19,7 @@ export const userModule = {
         CURRENT_USER_LOADED(state, user) {
             state.name = user.name;
             state.avatar = user.avatar;
+            state.userId = user.id;
         },
         LOGOUT(state) {
             overrideProps(state, initialState);
@@ -32,6 +34,7 @@ export const userModule = {
             const mutation = gql`
                 mutation login($accessToken: String!) {
                      login(accessToken:$accessToken){
+                          id
                           name
                           avatar
                     }
