@@ -1,7 +1,7 @@
 <template>
     <div>
         <v-content>
-            <ItemsBox :items="items" @removeExpense="removeExpense($event)">
+            <ItemsBox :items="items" @removeEntity="removeExpense($event)">
                 <template slot="elementBox" slot-scope="props">
                     <v-icon>add_shopping_cart</v-icon>
                     {{props.item.name}}
@@ -135,17 +135,32 @@
                     }));
             },
 
-        },
-        watch: {
-           removeExpense(oldExpense, newExpense) {
-               console.log('Removing expense');
-           },
-        },
-        computed: {
-          removeExpense() {
+            removeExpense(expenseId) {
+                console.log(expenseId);
+                // this.$apollo.mutate({
+                //     mutation: REMOVE_EXPENSE_MUTATION,
+                //     variables: {
+                //         accessToken: getAccessToken(),
+                //         groupId: groupId,
+                //         id: item.id
+                //     },
+                //     update: updateGetGroupById('removeExpense', 'expenses'),
+                // })
+                //     .then(() => {
+                //         this.dialog = false;
+                //         this.$emit('setSnackbar', {
+                //             message: 'Expense deleted successfully!',
+                //             operationType: 'success',
+                //         });
+                //     })
+                //     .catch(() => this.$emit('setSnackbar', {
+                //         message: 'Expense cannot be deleted!',
+                //         operationType:'error'
+                //     }));
+            }
 
-          }
         },
+
         props: ['items', 'groupId', 'ownerId', 'membersOfGroup'],
     };
 </script>

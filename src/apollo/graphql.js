@@ -9,6 +9,7 @@ const groupFields = `
         name
     }
     expenses {
+        id
         name
         price
         date
@@ -22,6 +23,7 @@ const groupFields = `
         }
     }
     transactions {
+        id
         from {
             name
             avatar

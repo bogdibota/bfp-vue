@@ -4,10 +4,12 @@
             <li class="flex-item wrapper">
                 <slot name="elementBox" :item="item"></slot>
             </li>
+
             <DisplayItemBoxInformation class="information" :item="item"
                                        :displayInformation="displayFields(item)"
-                                       @removeExpenseInterm="removeExpenseInterm()"
+                                        @removeEntity="$emit('removeEntity',$event)"
             ></DisplayItemBoxInformation>
+
         </ul>
 
         <ul class="flex-container">
@@ -73,7 +75,6 @@
                     'type': type
                 };
             },
-
         },
 
     };

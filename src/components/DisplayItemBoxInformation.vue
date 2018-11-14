@@ -52,8 +52,11 @@
 
             <v-card-actions>
                 <v-spacer></v-spacer>
-
-                <v-btn color="primary" flat @click="deleteItem()">
+                <!--on delete you open the confirmation modal-->
+                <!-- only on confirm deletion send the event-->
+                <!-- see the react project OfferDetails.js on github-->
+                <!-- make also a dialog component for updates-->
+                <v-btn color="primary" flat @click="$emit('removeEntity',item.id)">
                     Delete
                 </v-btn>
 
@@ -93,33 +96,6 @@
                     this.deleteExpense();
                 }
 
-            },
-            deleteExpense() {
-                this.$emit('removeExpense', {
-                    message: 'Expense cannot be added!',
-                    operationType: 'error',
-                });
-                console.log('in display item');
-                // this.$apollo.mutate({
-                //     mutation: REMOVE_EXPENSE_MUTATION,
-                //     variables: {
-                //         accessToken: getAccessToken(),
-                //         groupId: groupId,
-                //         id: item.id
-                //     },
-                //     update: updateGetGroupById('removeExpense', 'expenses'),
-                // })
-                //     .then(() => {
-                //         this.dialog = false;
-                //         this.$emit('setSnackbar', {
-                //             message: 'Expense deleted successfully!',
-                //             operationType: 'success',
-                //         });
-                //     })
-                //     .catch(() => this.$emit('setSnackbar', {
-                //         message: 'Expense cannot be deleted!',
-                //         operationType:'error'
-                //     }));
             },
         },
     };
