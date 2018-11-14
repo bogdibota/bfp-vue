@@ -1,7 +1,7 @@
 <template>
     <div>
         <v-content>
-            <ItemsBox :items="items">
+            <ItemsBox :items="items" @removeExpense="removeExpense($event)">
                 <template slot="elementBox" slot-scope="props">
                     <v-icon>add_shopping_cart</v-icon>
                     {{props.item.name}}
@@ -134,6 +134,17 @@
                         operationType: 'error',
                     }));
             },
+
+        },
+        watch: {
+           removeExpense(oldExpense, newExpense) {
+               console.log('Removing expense');
+           },
+        },
+        computed: {
+          removeExpense() {
+
+          }
         },
         props: ['items', 'groupId', 'ownerId', 'membersOfGroup'],
     };

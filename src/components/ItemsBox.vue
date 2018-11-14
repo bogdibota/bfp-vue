@@ -5,7 +5,9 @@
                 <slot name="elementBox" :item="item"></slot>
             </li>
             <DisplayItemBoxInformation class="information" :item="item"
-                                       :displayInformation="displayFields(item)"></DisplayItemBoxInformation>
+                                       :displayInformation="displayFields(item)"
+                                       @removeExpenseInterm="removeExpenseInterm()"
+            ></DisplayItemBoxInformation>
         </ul>
 
         <ul class="flex-container">
@@ -71,6 +73,7 @@
                     'type': type
                 };
             },
+
         },
 
     };
