@@ -49,6 +49,7 @@ export const ALL_GROUPS_QUERY = gql`
     }
 `;
 
+
 export const GET_PERSONS_QUERY = gql`
     query myFriends($accessToken: String!, $excludeGroupId:String) {
         myFriends(accessToken: $accessToken, excludeGroupId: $excludeGroupId) {
@@ -103,13 +104,7 @@ export const UPDATE_GROUP_MUTATION = gql`
             addUserId: $addUserId,
             name: $name
         ) {
-            id
-            name
-            users {
-                id
-                name
-                avatar
-            }
+            ${groupFields}
         }         
     }
 `;
@@ -159,5 +154,14 @@ export const MAKE_MAGIC_QUERY = gql`
                 status
             }
            }
+    }
+`;
+
+export const DELETE_GROUP_MUTATION = gql`
+    mutation removeGroup($accessToken: String!, $groupId: String!) {
+        removeGroup (
+             accessToken: $accessToken, 
+             id: $groupId,
+        ) 
     }
 `;
