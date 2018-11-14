@@ -39,6 +39,16 @@
                     />
                 </section>
 
+                <section v-if="isAdmin()" title="Administrator">
+                    <v-subheader><h3>Administrator operations</h3></v-subheader>
+                    <v-divider/>
+                    <AdminSection :groupId="groupId"
+                                  :index="this.$route.params.index"
+                                  :oldGroupName="group.name"
+                                  @setSnackbar="setSnackAttributes($event)"
+                    />
+                </section>
+
                 <v-snackbar
                         v-model="snackbar"
                         bottom
@@ -67,6 +77,7 @@
     import FriendsItemsBox from './FriendsItemsBox';
     import ExpenseItemsBox from './ExpenseItemsBox';
     import MakeMagic from './MakeMagic';
+    import AdminSection from './AdminSection';
     import { GET_GROUP_QUERY } from '../apollo/graphql';
     import { getAccessToken } from '../lib/facebook';
 
@@ -78,6 +89,7 @@
             FriendsItemsBox,
             ExpenseItemsBox,
             MakeMagic,
+            AdminSection
         },
         data() {
             return {
@@ -100,6 +112,9 @@
             },
         },
         methods: {
+            isAdmin() {
+                return this.$store.state.user.userId === this.group.owner.id;
+            },
             setSnackAttributes(snack) {
                 this.snackbar = true;
                 this.snackMessage = snack.message;
