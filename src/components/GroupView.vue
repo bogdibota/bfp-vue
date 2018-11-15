@@ -11,6 +11,7 @@
                     <v-divider></v-divider>
                     <FriendsItemsBox
                             :items="group.users"
+                            :ownerId="group.owner.id"
                             :groupId="groupId"
                             @setSnackbar="setSnackAttributes($event)"
                     />
@@ -34,6 +35,7 @@
                     <TransactionItemsBox
                             :items="group.transactions"
                             :groupId="groupId"
+                            :ownerId="group.owner.id"
                             :membersOfGroup="group.users"
                             @setSnackbar="setSnackAttributes($event)"
                     />

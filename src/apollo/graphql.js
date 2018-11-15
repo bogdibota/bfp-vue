@@ -14,6 +14,7 @@ const groupFields = `
         price
         date
         payer {
+            id
             name
             avatar
         }
@@ -25,6 +26,7 @@ const groupFields = `
     transactions {
         id
         from {
+            id
             name
             avatar
         }
@@ -99,11 +101,12 @@ export const CREATE_GROUP_MUTATION = gql`
 `;
 
 export const UPDATE_GROUP_MUTATION = gql`
-    mutation updateGroup($accessToken: String!, $id: String!, $addUserId: String, $name: String) {
+    mutation updateGroup($accessToken: String!, $id: String!, $addUserId: String, $removeUserId: String, $name: String) {
         updateGroup(
             accessToken: $accessToken,
             id: $id,
             addUserId: $addUserId,
+            removeUserId: $removeUserId,
             name: $name
         ) {
             ${groupFields}
