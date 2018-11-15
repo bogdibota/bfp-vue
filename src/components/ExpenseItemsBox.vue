@@ -1,7 +1,7 @@
 <template>
     <div>
         <v-content>
-            <ItemsBox :items="items">
+            <ItemsBox :items="items" @removeEntity="removeExpense($event)" :ownerId="this.ownerId">
                 <template slot="elementBox" slot-scope="props">
                     <v-icon>add_shopping_cart</v-icon>
                     {{props.item.name}}
@@ -92,7 +92,7 @@
 </template>
 
 <script>
-    import { ADD_EXPENSE_MUTATION, updateGetGroupById } from '../apollo/graphql';
+    import { ADD_EXPENSE_MUTATION, REMOVE_EXPENSE_MUTATION, updateGetGroupById } from '../apollo/graphql';
     import { getAccessToken } from '../lib/facebook';
     import ItemsBox from './ItemsBox';
     import ImageOrIcon from './ImageOrIcon';
@@ -115,7 +115,7 @@
                     variables: {
                         accessToken: getAccessToken(),
                         groupId: this.groupId,
-                        payerId: this.ownerId,
+                        payerId: this.$store.state.user.userId,
                         peopleIds: this.selectedFriendsIds,
                         name: this.nameExpense,
                         price: this.priceExpense,
@@ -134,7 +134,32 @@
                         operationType: 'error',
                     }));
             },
+
+            removeExpense(expenseId) {
+                this.$apollo.mutate({
+                    mutation: REMOVE_EXPENSE_MUTATION,
+                    variables: {
+                        accessToken: getAccessToken(),
+                        groupId: this.groupId,
+                        id: expenseId
+                    },
+                    update: updateGetGroupById('removeExpense', 'expenses'),
+                })
+                    .then(() => {
+                        this.dialog = false;
+                        this.$emit('setSnackbar', {
+                            message: 'Expense deleted successfully!',
+                            operationType: 'success',
+                        });
+                    })
+                    .catch(() => this.$emit('setSnackbar', {
+                        message: 'Expense cannot be deleted!',
+                        operationType:'error'
+                    }));
+            },
+
         },
+
         props: ['items', 'groupId', 'ownerId', 'membersOfGroup'],
     };
 </script>

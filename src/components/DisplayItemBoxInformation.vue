@@ -52,9 +52,22 @@
 
             <v-card-actions>
                 <v-spacer></v-spacer>
+                <v-btn v-if="canUpdateOrDelete" color="primary" flat @click="$refs.deleteConfirmationDialog.open()">
+                    Delete
+                </v-btn>
+
+                <ConfirmationDialog
+                        ref="deleteConfirmationDialog"
+                        :title="'Delete '+item.__typename "
+                        :message="'Are you sure you want to delete this '+item.__typename+ '?'"
+                        @confirm="deleteConfirmation()"
+                ></ConfirmationDialog>
+
+
                 <v-btn color="primary" flat @click="dialog = false">
                     Close
                 </v-btn>
+
             </v-card-actions>
         </v-card>
     </v-dialog>
@@ -63,24 +76,29 @@
 <script>
 
     import ImageOrIcon from './ImageOrIcon';
+    import ConfirmationDialog from './ConfirmationDialog';
     import UserCard from './UserCard';
 
     export default {
 
         name: 'display-item-box-information',
-        props: ['item', 'displayInformation'],
+        props: ['item', 'displayInformation','canUpdateOrDelete'],
 
         data: () => ({
             dialog: '',
         }),
         components: {
-            ImageOrIcon, UserCard,
+            ImageOrIcon, UserCard, ConfirmationDialog,
         },
         methods: {
             getDate(dateFloat) {
                 const date = new Date(dateFloat);
                 return date.toDateString();
             },
+            deleteConfirmation() {
+                this.dialog = false;
+                this.$emit('removeEntity',this.item.id);
+            }
         },
     };
 </script>

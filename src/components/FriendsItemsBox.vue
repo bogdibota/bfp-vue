@@ -1,7 +1,7 @@
 <template>
     <div>
         <v-content>
-            <ItemsBox :items="items">
+            <ItemsBox :items="items" @removeEntity="removeUser($event)" :ownerId="this.ownerId">
                 <template slot="elementBox" slot-scope="props">
                     <v-avatar size="45px">
                         <ImageOrIcon :imageUrl="props.item.avatar"></ImageOrIcon>
@@ -130,8 +130,31 @@
                     },
                 );
             },
+
+            removeUser(userId) {
+                this.$apollo.mutate({
+                    mutation: UPDATE_GROUP_MUTATION,
+                    variables: {
+                        accessToken: getAccessToken(),
+                        id: this.groupId,
+                        removeUserId: userId,
+                    },
+                    update: updateGetGroupById('updateGroup', 'users'),
+                })
+                    .then(() => {
+                        this.dialog = false;
+                        this.$emit('setSnackbar', {
+                            message: 'User was removed successfully!',
+                            operationType: 'success',
+                        });
+                    })
+                    .catch(() => this.$emit('setSnackbar', {
+                        message: 'User cannot be removed!',
+                        operationType: 'error',
+                    }));
+            },
         },
-        props: ['items', 'groupId'],
+        props: ['items', 'groupId','ownerId'],
     };
 </script>
 

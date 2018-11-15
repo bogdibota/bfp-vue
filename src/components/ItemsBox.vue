@@ -4,8 +4,13 @@
             <li class="flex-item wrapper">
                 <slot name="elementBox" :item="item"></slot>
             </li>
+
             <DisplayItemBoxInformation class="information" :item="item"
-                                       :displayInformation="displayFields(item)"></DisplayItemBoxInformation>
+                                       :canUpdateOrDelete="canUpdateOrDelete(item)"
+                                       :displayInformation="displayFields(item)"
+                                        @removeEntity="$emit('removeEntity',$event)"
+            ></DisplayItemBoxInformation>
+
         </ul>
 
         <ul class="flex-container">
@@ -21,7 +26,7 @@
 
     export default {
         name: 'items-box',
-        props: ['items'],
+        props: ['items','ownerId'],
         components: {
             DisplayItemBoxInformation,
         },
@@ -29,6 +34,17 @@
             dialogProp: false,
         }),
         methods: {
+            canUpdateOrDelete(item) {
+                if (item.__typename == 'Expense') {
+                    return this.$store.state.user.userId === this.ownerId ||
+                           this.$store.state.user.userId === item.payer.id;
+                }
+                else if (item.__typename == 'Transaction')
+                    return this.$store.state.user.userId === this.ownerId ||
+                        this.$store.state.user.userId === item.from.id;
+                else if (item.__typename == 'User')
+                    return this.$store.state.user.userId === this.ownerId;
+            },
             displayFields(item) {
                 if (item.__typename == 'Expense')
                     return this.displayFieldsExpanse();

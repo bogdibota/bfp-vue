@@ -1,7 +1,7 @@
 <template>
     <div>
         <v-content>
-            <ItemsBox :items="items">
+            <ItemsBox :items="items" @removeEntity="removeTransaction($event)" :ownerId="this.ownerId">
                 <template slot="elementBox" slot-scope="props">
                     <v-icon>account_balance</v-icon>
                     From:
@@ -137,7 +137,7 @@
 </template>
 
 <script>
-    import { ADD_TRANSACTION_MUTATION, updateGetGroupById } from '../apollo/graphql';
+    import { ADD_TRANSACTION_MUTATION, REMOVE_TRANSACTION_MUTATION, updateGetGroupById } from '../apollo/graphql';
     import { getAccessToken } from '../lib/facebook';
     import ItemsBox from './ItemsBox';
     import ImageOrIcon from './ImageOrIcon';
@@ -180,7 +180,30 @@
                         operationType: 'error',
                     }));
             },
+
+            removeTransaction(transactionId) {
+                this.$apollo.mutate({
+                    mutation: REMOVE_TRANSACTION_MUTATION,
+                    variables: {
+                        accessToken: getAccessToken(),
+                        groupId: this.groupId,
+                        id: transactionId
+                    },
+                    update: updateGetGroupById('removeTransaction', 'transactions'),
+                })
+                    .then(() => {
+                        this.dialog = false;
+                        this.$emit('setSnackbar', {
+                            message: 'Transaction deleted successfully!',
+                            operationType: 'success',
+                        });
+                    })
+                    .catch(() => this.$emit('setSnackbar', {
+                        message: 'Transaction cannot be deleted!',
+                        operationType:'error'
+                    }));
+            }
         },
-        props: ['items', 'groupId', 'membersOfGroup'],
+        props: ['items', 'groupId', 'membersOfGroup','ownerId'],
     };
 </script>

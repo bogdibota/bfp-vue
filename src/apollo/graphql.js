@@ -9,10 +9,12 @@ const groupFields = `
         name
     }
     expenses {
+        id
         name
         price
         date
         payer {
+            id
             name
             avatar
         }
@@ -22,7 +24,9 @@ const groupFields = `
         }
     }
     transactions {
+        id
         from {
+            id
             name
             avatar
         }
@@ -97,11 +101,12 @@ export const CREATE_GROUP_MUTATION = gql`
 `;
 
 export const UPDATE_GROUP_MUTATION = gql`
-    mutation updateGroup($accessToken: String!, $id: String!, $addUserId: String, $name: String) {
+    mutation updateGroup($accessToken: String!, $id: String!, $addUserId: String, $removeUserId: String, $name: String) {
         updateGroup(
             accessToken: $accessToken,
             id: $id,
             addUserId: $addUserId,
+            removeUserId: $removeUserId,
             name: $name
         ) {
             ${groupFields}
@@ -154,6 +159,30 @@ export const MAKE_MAGIC_QUERY = gql`
                 status
             }
            }
+    }
+`;
+
+export const REMOVE_EXPENSE_MUTATION = gql`
+    mutation removeExpense($accessToken: String!, $groupId: String!, $id: String!) {
+        removeExpense(
+            accessToken: $accessToken,
+            groupId: $groupId,
+            id: $id
+        ) {
+            ${groupFields}
+          }
+    }
+`;
+
+export const REMOVE_TRANSACTION_MUTATION = gql`
+    mutation removeTransaction($accessToken: String!, $groupId: String!, $id: String!) {
+        removeTransaction(
+            accessToken: $accessToken,
+            groupId: $groupId,
+            id: $id
+        ) {
+            ${groupFields}
+          }
     }
 `;
 
