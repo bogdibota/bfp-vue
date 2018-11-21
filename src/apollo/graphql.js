@@ -6,6 +6,7 @@ const groupFields = `
     name
     owner {
         id
+        avatar
         name
     }
     expenses {

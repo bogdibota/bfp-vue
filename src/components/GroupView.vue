@@ -5,6 +5,11 @@
                 <Header :headerTitle="group.name"/>
 
                 <MakeMagic :groupId="group.id"/>
+                <section title="Group information">
+                    <v-subheader><h3>Group information</h3></v-subheader>
+                    <v-divider></v-divider>
+                    <GroupInformation :groupOwner="group.owner"/>
+                </section>
 
                 <section title="People">
                     <v-subheader><h3>People</h3></v-subheader>
@@ -79,8 +84,10 @@
     import ExpenseItemsBox from './ExpenseItemsBox';
     import MakeMagic from './MakeMagic';
     import AdminSection from './AdminSection';
+    import GroupInformation from './GroupInformation';
     import { GET_GROUP_QUERY } from '../apollo/graphql';
     import { getAccessToken } from '../lib/facebook';
+
 
     export default {
         name: 'group-view',
@@ -91,6 +98,7 @@
             ExpenseItemsBox,
             MakeMagic,
             AdminSection,
+            GroupInformation,
         },
         data() {
             return {
@@ -132,3 +140,4 @@
         },
     };
 </script>
+
