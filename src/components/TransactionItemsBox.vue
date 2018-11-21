@@ -7,6 +7,7 @@
                       @removeEntity="removeTransaction($event)"
                       @updateEntity="updateTransaction($event)"
                       :ownerId="this.ownerId"
+                      :success="success"
                       :membersOfGroup="membersOfGroup">
                 <template slot="elementBox" slot-scope="props">
                     <v-icon>account_balance</v-icon>
@@ -38,11 +39,11 @@
     export default {
         name: 'items-box',
         data: () => ({
-            dialog: '',
             fromId: '',
             toId: '',
             commentTransaction: '',
             priceTransaction: '',
+            success: '',
         }),
         components: {
             ItemsBox, ImageOrIcon,
@@ -62,16 +63,21 @@
                     update: updateGetGroupById('addTransaction', 'transactions'),
                 })
                     .then(() => {
-                        this.dialog = false;
                         this.$emit('setSnackbar', {
                             message: 'Transaction was added successfully!',
                             operationType: 'success',
                         });
+
+                        this.success += 1;
                     })
-                    .catch(() => this.$emit('setSnackbar', {
-                        message: 'Transaction cannot be added!',
-                        operationType: 'error',
-                    }));
+                    .catch(() => {
+                        this.$emit('setSnackbar', {
+                            message: 'Transaction cannot be added!',
+                            operationType: 'error',
+                        });
+
+                        this.success = 0;
+                    });
             },
 
             removeTransaction(transactionId) {
@@ -85,7 +91,6 @@
                     update: updateGetGroupById('removeTransaction', 'transactions'),
                 })
                     .then(() => {
-                        this.dialog = false;
                         this.$emit('setSnackbar', {
                             message: 'Transaction deleted successfully!',
                             operationType: 'success',
@@ -111,7 +116,6 @@
                     update: updateGetGroupById('updateTransaction', 'transactions'),
                 })
                     .then(() => {
-                        this.dialog = false;
                         this.$emit('setSnackbar', {
                             message: 'Transaction updated successfully!',
                             operationType: 'success',
@@ -126,3 +130,4 @@
         props: ['items', 'groupId', 'membersOfGroup', 'ownerId'],
     };
 </script>
+

@@ -3,6 +3,7 @@
         <v-content>
             <ItemsBox type="User"
                       :items="items"
+                      :success="success"
                       @addEntity="addUsers($event)"
                       @removeEntity="removeUser($event)"
                       :ownerId="this.ownerId"
@@ -28,10 +29,10 @@
         name: 'items-box',
         data: () => ({
             friends: [],
-            dialog: '',
             selectedFriendsIds: [],
             searchInput: '',
             name: '',
+            success: 0,
         }),
         props: ['items', 'groupId', 'ownerId'],
         apollo: {
@@ -59,16 +60,21 @@
                         update: updateGetGroupById('updateGroup', 'users'),
                     })
                         .then(() => {
-                            this.dialog = false;
                             this.$emit('setSnackbar', {
                                 message: 'User was added successfully!',
                                 operationType: 'success',
                             });
+
+                            this.success += 1;
                         })
-                        .catch(() => this.$emit('setSnackbar', {
-                            message: 'User cannot be added!',
-                            operationType: 'error',
-                        }));
+                        .catch(() => {
+                            this.$emit('setSnackbar', {
+                                message: 'User cannot be added!',
+                                operationType: 'error',
+                            });
+
+                            this.success = 0;
+                        });
                 });
             },
             removeUser(userId) {
@@ -82,7 +88,6 @@
                     update: updateGetGroupById('updateGroup', 'users'),
                 })
                     .then(() => {
-                        this.dialog = false;
                         this.$emit('setSnackbar', {
                             message: 'User was removed successfully!',
                             operationType: 'success',

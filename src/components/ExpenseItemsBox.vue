@@ -6,6 +6,7 @@
                       @addEntity="addExpense($event)"
                       @removeEntity="removeExpense($event)"
                       @updateEntity="updateEntity($event)"
+                      :success="success"
                       :ownerId="this.ownerId"
                       :membersOfGroup="this.membersOfGroup">
                 <template slot="elementBox" slot-scope="props">
@@ -31,10 +32,10 @@
     export default {
         name: 'items-box',
         data: () => ({
-            dialog: '',
             nameExpense: '',
             priceExpense: '',
             selectedFriendsIds: [],
+            success:0,
         }),
         props: ['items', 'groupId', 'ownerId', 'membersOfGroup'],
         components: {
@@ -55,16 +56,19 @@
                     update: updateGetGroupById('addExpense', 'expenses'),
                 })
                     .then(() => {
-                        this.dialog = false;
                         this.$emit('setSnackbar', {
                             message: 'Expense was added successfully!',
                             operationType: 'success',
                         });
+                        this.success+=1;
                     })
-                    .catch(() => this.$emit('setSnackbar', {
-                        message: 'Expense cannot be added!',
-                        operationType: 'error',
-                    }));
+                    .catch(() => {
+                        this.$emit('setSnackbar', {
+                            message: 'Expense cannot be added!',
+                            operationType: 'error',
+                        })
+                        this.success=0;
+                    });
             },
 
             removeExpense(expenseId) {
@@ -78,11 +82,11 @@
                     update: updateGetGroupById('removeExpense', 'expenses'),
                 })
                     .then(() => {
-                        this.dialog = false;
                         this.$emit('setSnackbar', {
                             message: 'Expense deleted successfully!',
                             operationType: 'success',
                         });
+
                     })
                     .catch(() => this.$emit('setSnackbar', {
                         message: 'Expense cannot be deleted!',
@@ -104,7 +108,6 @@
                     update: updateGetGroupById('updateExpense', 'expenses'),
                 })
                     .then(() => {
-                        this.dialog = false;
                         this.$emit('setSnackbar', {
                             message: 'Expense updated successfully!',
                             operationType: 'success',

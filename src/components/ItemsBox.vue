@@ -31,6 +31,7 @@
                                     :title="'Add ' + type"
                                     :item="emptyObject()"
                                     :addition="true"
+                                    :success="success"
                                     :canUpdateOrDelete="false"
                                     :displayInformation="displayFields(type)"
                                     :listOfFriends="membersOfGroup"
@@ -47,7 +48,7 @@
 
     export default {
         name: 'items-box',
-        props: ['items', 'ownerId', 'membersOfGroup', 'type'],
+        props: ['items', 'ownerId', 'membersOfGroup', 'type', 'success'],
         components: {
             ItemsBoxDialog,
         },

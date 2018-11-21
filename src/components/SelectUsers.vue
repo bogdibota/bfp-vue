@@ -40,7 +40,7 @@
 
     export default {
         name: 'select-users',
-        props: ['show', 'items', 'model', 'multiple','label'],
+        props: ['show', 'items', 'model', 'multiple', 'label'],
         components: {
             ImageOrIcon,
         },
@@ -49,14 +49,6 @@
                 selected: this.model,
             };
         },
-        methods: {
-            updateValues() {
-                this.$emit('change', this.selected);
-            },
-        },
     };
 </script>
 
-<style scoped>
-
-</style>
