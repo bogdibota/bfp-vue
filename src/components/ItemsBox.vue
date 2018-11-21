@@ -1,43 +1,90 @@
 <template>
     <div>
-        <ul v-for="item in items" class="flex-container">
+        <ul v-for="(item,index) in items" class="flex-container">
             <li class="flex-item wrapper">
                 <slot name="elementBox" :item="item"></slot>
             </li>
 
-            <DisplayItemBoxInformation class="information" :item="item"
-                                       :canUpdateOrDelete="canUpdateOrDelete(item)"
-                                       :displayInformation="displayFields(item)"
-                                        @removeEntity="$emit('removeEntity',$event)"
-            ></DisplayItemBoxInformation>
+            <div class="information">
+                <v-icon size="25px" @click="$refs.informationDialog[index].open()">info</v-icon>
 
+                <ItemsBoxDialog ref="informationDialog"
+                                :title="item.__typename"
+                                :item="item"
+                                :addition="false"
+                                :canUpdateOrDelete="canUpdateOrDelete(item)"
+                                :displayInformation="displayFields(item.__typename)"
+                                :listOfFriends="membersOfGroup"
+                                @removeEntity="$emit('removeEntity',$event)"
+                                @updateEntity="$emit('updateEntity',$event)"
+                ></ItemsBoxDialog>
+            </div>
         </ul>
 
         <ul class="flex-container">
             <li class="flex-item">
-                <slot name="addElementBox"></slot>
+                <div @click="$refs.addDialog.open()">
+                    <v-icon>add</v-icon>
+                    Add {{type}}
+
+                    <ItemsBoxDialog ref="addDialog"
+                                    :title="'Add ' + type"
+                                    :item="emptyObject()"
+                                    :addition="true"
+                                    :canUpdateOrDelete="false"
+                                    :displayInformation="displayFields(type)"
+                                    :listOfFriends="membersOfGroup"
+                                    @addEntity="$emit('addEntity',$event)"
+                    ></ItemsBoxDialog>
+                </div>
             </li>
         </ul>
     </div>
 </template>
 
 <script>
-    import DisplayItemBoxInformation from './DisplayItemBoxInformation';
+    import ItemsBoxDialog from './ItemsBoxDialog';
 
     export default {
         name: 'items-box',
-        props: ['items','ownerId'],
+        props: ['items', 'ownerId', 'membersOfGroup', 'type'],
         components: {
-            DisplayItemBoxInformation,
+            ItemsBoxDialog,
         },
         data: () => ({
             dialogProp: false,
         }),
         methods: {
+            emptyObject() {
+                const item = {};
+
+                if (this.type === 'Expense') {
+                    item.__typename = 'Expense';
+                    item.name = '';
+                    item.payer = this.$store.state.user;
+                    item.price = '';
+                    item.people = [];
+                    item.date = '';
+                }
+                else if (this.type === 'Transaction') {
+                    item.__typename = 'Transaction';
+                    item.comment = '';
+                    item.price = '';
+                    item.to = {};
+                    item.from = {};
+                }
+                else if (this.type === 'User') {
+                    item.__typename = 'User';
+                    item.name = '';
+                    item.avatar = '';
+                }
+
+                return item;
+            },
             canUpdateOrDelete(item) {
                 if (item.__typename == 'Expense') {
                     return this.$store.state.user.userId === this.ownerId ||
-                           this.$store.state.user.userId === item.payer.id;
+                        this.$store.state.user.userId === item.payer.id;
                 }
                 else if (item.__typename == 'Transaction')
                     return this.$store.state.user.userId === this.ownerId ||
@@ -45,12 +92,12 @@
                 else if (item.__typename == 'User')
                     return this.$store.state.user.userId === this.ownerId;
             },
-            displayFields(item) {
-                if (item.__typename == 'Expense')
+            displayFields(typename) {
+                if (typename == 'Expense')
                     return this.displayFieldsExpanse();
-                else if (item.__typename === 'Transaction')
+                else if (typename === 'Transaction')
                     return this.displayFieldsTransaction();
-                else if (item.__typename === 'User')
+                else if (typename === 'User')
                     return this.displayFieldsUser();
 
             },
@@ -62,29 +109,29 @@
                     this.displayField('Payer', 'payer', 'avatar'),
                     {
                         fieldName: 'people',
-                        displayText:'People',
-                        type: 'avatarList'
-                    }
-                ]
+                        displayText: 'People',
+                        type: 'avatarList',
+                    },
+                ];
             },
             displayFieldsTransaction() {
                 return [
                     this.displayField('Comment', 'comment', 'string'),
                     this.displayField('Price', 'price', 'string'),
                     this.displayField('From:', 'from', 'avatar'),
-                    this.displayField('To:', 'to', 'avatar')
-                ]
+                    this.displayField('To:', 'to', 'avatar'),
+                ];
             },
             displayFieldsUser() {
                 return [
-                    this.displayField(null,null, 'avatar')
+                    this.displayField(null, null, 'avatar'),
                 ];
             },
             displayField(displayText, fieldName, type) {
                 return {
                     'displayText': displayText,
                     'fieldName': fieldName,
-                    'type': type
+                    'type': type,
                 };
             },
         },
