@@ -35,7 +35,7 @@
             nameExpense: '',
             priceExpense: '',
             selectedFriendsIds: [],
-            success:0,
+            success: 0,
         }),
         props: ['items', 'groupId', 'ownerId', 'membersOfGroup'],
         components: {
@@ -60,14 +60,13 @@
                             message: 'Expense was added successfully!',
                             operationType: 'success',
                         });
-                        this.success+=1;
+                        this.success += 1;
                     })
                     .catch(() => {
                         this.$emit('setSnackbar', {
                             message: 'Expense cannot be added!',
                             operationType: 'error',
-                        })
-                        this.success=0;
+                        });
                     });
             },
 

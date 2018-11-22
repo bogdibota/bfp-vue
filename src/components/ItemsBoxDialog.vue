@@ -153,10 +153,8 @@
         },
         watch: {
             success: function () {
-                if (this.success !== 0) {
-                    this.$refs.form.reset();
-                    this.dialog = false;
-                }
+                this.$refs.form.reset();
+                this.dialog = false;
             },
         },
         methods: {
@@ -185,7 +183,6 @@
             },
 
             addConfirmation() {
-
                 this.$emit('addEntity', this.item);
             },
 

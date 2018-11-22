@@ -75,8 +75,6 @@
                             message: 'Transaction cannot be added!',
                             operationType: 'error',
                         });
-
-                        this.success = 0;
                     });
             },
 
