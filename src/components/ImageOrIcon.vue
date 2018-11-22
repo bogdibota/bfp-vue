@@ -1,10 +1,10 @@
 <template>
-        <img
-                v-if="!imageUrl.includes('scontent')"
-                :src="imageUrl"
-                alt="Avatar"
-        >
-        <v-icon v-else>person</v-icon>
+    <img
+            v-if="!imageUrl.includes('scontent')"
+            :src="imageUrl"
+            alt="Avatar"
+    >
+    <v-icon v-else>person</v-icon>
 </template>
 
 <script>
@@ -14,6 +14,6 @@
     };
 </script>
 
-<style scoped>
 
-</style>
+
+

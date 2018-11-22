@@ -19,6 +19,7 @@ const groupFields = `
             avatar
         }
         people {
+            id
             name
             avatar
         }
@@ -194,3 +195,34 @@ export const DELETE_GROUP_MUTATION = gql`
         ) 
     }
 `;
+
+export const UPDATE_EXPENSE_MUTATION = gql`
+    mutation updateExpense($accessToken: String!, $groupId: String!, $id: String!, $peopleIds: [String], $name: String, $price: Float) {
+        updateExpense (
+            accessToken: $accessToken, 
+            groupId: $groupId,
+            id: $id,
+            peopleIds: $peopleIds,
+            name: $name, 
+            price: $price
+        ) {
+            ${groupFields}
+          }
+    }
+`;
+
+export const UPDATE_TRANSACTION_MUTATION = gql`
+    mutation updateTransaction($accessToken: String!, $groupId: String!, $id: String!, $toId: String, $comment: String, $price: Float) {
+        updateTransaction (
+            accessToken: $accessToken, 
+            groupId: $groupId,
+            id: $id,
+            toId: $toId,
+            comment: $comment, 
+            price: $price
+        ) {
+            ${groupFields}
+          }
+    }
+`;
+

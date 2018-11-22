@@ -124,7 +124,5 @@
     };
 </script>
 
-<style scoped>
 
-</style>
 
