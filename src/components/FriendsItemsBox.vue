@@ -1,6 +1,6 @@
 <template>
-    <div>
-        <v-content>
+    <v-content>
+        <v-container fluid v-if="!$apollo.queries.friends.loading">
             <ItemsBox :items="items" @removeEntity="removeUser($event)" :ownerId="this.ownerId">
                 <template slot="elementBox" slot-scope="props">
                     <v-avatar size="45px">
@@ -73,8 +73,8 @@
                     </v-dialog>
                 </template>
             </ItemsBox>
-        </v-content>
-    </div>
+        </v-container>
+    </v-content>
 </template>
 
 <script>
@@ -95,8 +95,11 @@
         apollo: {
             friends: {
                 query: GET_PERSONS_QUERY,
-                variables: {
-                    accessToken: getAccessToken(),
+                variables() {
+                    return {
+                        accessToken: getAccessToken(),
+                        excludeGroupId: this.groupId
+                    }
                 },
                 update: ({ myFriends }) => myFriends,
             },
