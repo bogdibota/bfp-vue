@@ -1,80 +1,24 @@
 <template>
-    <v-content>
-        <v-container fluid v-if="!$apollo.queries.friends.loading">
-            <ItemsBox :items="items" @removeEntity="removeUser($event)" :ownerId="this.ownerId">
+
+    <v-container fluid v-if="!$apollo.queries.friends.loading">
+
+        <v-content>
+            <ItemsBox type="User"
+                      :items="items"
+                      :success="success"
+                      @addEntity="addUsers($event)"
+                      @removeEntity="removeUser($event)"
+                      :ownerId="this.ownerId"
+                      :membersOfGroup="friends">
                 <template slot="elementBox" slot-scope="props">
                     <v-avatar size="45px">
                         <ImageOrIcon :imageUrl="props.item.avatar"></ImageOrIcon>
                     </v-avatar>
                     {{props.item.name}}
                 </template>
-
-                <template slot="addElementBox">
-                    <v-dialog v-model="dialog" width="500">
-                        <div slot="activator">
-                            <v-icon>add</v-icon>
-                            Add member
-                        </div>
-
-                        <v-card>
-                            <v-card-title
-                                    class="headline grey lighten-2"
-                                    primary-title>
-                                Add member:
-                            </v-card-title>
-                            <v-card-text>
-                                <v-flex>
-                                    <v-select
-                                            :items="friends"
-                                            v-model="selectedFriendsIds"
-                                            label="Select"
-                                            item-text="name"
-                                            item-value="id"
-                                            multiple
-                                            chips
-                                            max-height="auto"
-                                            autocomplete
-                                            size="2"
-                                    >
-                                        <template slot="selection" slot-scope="data">
-                                            <v-chip
-                                                    :selected="data.selected"
-                                                    close
-                                                    class="chip--select-multi"
-                                                    @input="data.parent.selectItem(data.item)"
-                                            >
-                                                <v-avatar>
-                                                    <ImageOrIcon :imageUrl="data.item.avatar"></ImageOrIcon>
-                                                </v-avatar>
-                                                {{ data.item.name }}
-                                            </v-chip>
-                                        </template>
-                                        <template slot="item" slot-scope="data">
-                                            <v-list-tile-avatar>
-                                                <ImageOrIcon :imageUrl="data.item.avatar"></ImageOrIcon>
-                                            </v-list-tile-avatar>
-                                            <v-list-tile-content>
-                                                <v-list-tile-title v-html="data.item.name"></v-list-tile-title>
-                                            </v-list-tile-content>
-                                        </template>
-                                    </v-select>
-                                </v-flex>
-                            </v-card-text>
-
-                            <v-card-actions>
-                                <v-btn color="primary" flat @click="addItem()">
-                                    Add
-                                </v-btn>
-                                <v-btn color="primary" flat @click="dialog = false">
-                                    Close
-                                </v-btn>
-                            </v-card-actions>
-                        </v-card>
-                    </v-dialog>
-                </template>
             </ItemsBox>
-        </v-container>
-    </v-content>
+        </v-content>
+    </v-container>
 </template>
 
 <script>
@@ -87,53 +31,57 @@
         name: 'items-box',
         data: () => ({
             friends: [],
-            dialog: '',
             selectedFriendsIds: [],
             searchInput: '',
             name: '',
+            success: 0,
         }),
+        props: ['items', 'groupId', 'ownerId'],
         apollo: {
             friends: {
                 query: GET_PERSONS_QUERY,
                 variables() {
                     return {
                         accessToken: getAccessToken(),
-                        excludeGroupId: this.groupId
-                    }
+                        excludeGroupId: this.groupId,
+                    };
                 },
                 update: ({ myFriends }) => myFriends,
             },
         },
         components: {
-            ItemsBox, ImageOrIcon
+            ItemsBox, ImageOrIcon,
         },
         methods: {
-            addItem() {
-                this.selectedFriendsIds.forEach(friendId => {
-                        this.$apollo.mutate({
-                            mutation: UPDATE_GROUP_MUTATION,
-                            variables: {
-                                accessToken: getAccessToken(),
-                                id: this.groupId,
-                                addUserId: friendId,
-                            },
-                            update: updateGetGroupById('updateGroup', 'users'),
+            addUsers(item) {
+                item['null'].forEach(friend => {
+                    this.$apollo.mutate({
+                        mutation: UPDATE_GROUP_MUTATION,
+                        variables: {
+                            accessToken: getAccessToken(),
+                            id: this.groupId,
+                            addUserId: friend.id,
+                        },
+                        update: updateGetGroupById('updateGroup', 'users'),
+                    })
+                        .then(() => {
+                            this.$emit('setSnackbar', {
+                                message: 'User was added successfully!',
+                                operationType: 'success',
+                            });
+
+                            this.success += 1;
                         })
-                            .then(() => {
-                                this.dialog = false;
-                                this.$emit('setSnackbar', {
-                                    message: 'User was added successfully!',
-                                    operationType: 'success',
-                                });
-                            })
-                            .catch(() => this.$emit('setSnackbar', {
+                        .catch(() => {
+                            this.$emit('setSnackbar', {
                                 message: 'User cannot be added!',
                                 operationType: 'error',
-                            }));
-                    },
-                );
-            },
+                            });
 
+                            this.success = 0;
+                        });
+                });
+            },
             removeUser(userId) {
                 this.$apollo.mutate({
                     mutation: UPDATE_GROUP_MUTATION,
@@ -145,7 +93,6 @@
                     update: updateGetGroupById('updateGroup', 'users'),
                 })
                     .then(() => {
-                        this.dialog = false;
                         this.$emit('setSnackbar', {
                             message: 'User was removed successfully!',
                             operationType: 'success',
@@ -157,7 +104,6 @@
                     }));
             },
         },
-        props: ['items', 'groupId','ownerId'],
     };
 </script>
 
