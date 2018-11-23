@@ -1,7 +1,6 @@
 <template>
 
-    <v-container fluid v-if="!$apollo.queries.friends.loading">
-
+    <v-container>
         <v-content>
             <ItemsBox type="User"
                       :items="items"
@@ -70,6 +69,7 @@
                                 operationType: 'success',
                             });
 
+                            this.getFriends();
                             this.success += 1;
                         })
                         .catch(() => {
@@ -77,8 +77,6 @@
                                 message: 'User cannot be added!',
                                 operationType: 'error',
                             });
-
-                            this.success = 0;
                         });
                 });
             },
@@ -97,11 +95,24 @@
                             message: 'User was removed successfully!',
                             operationType: 'success',
                         });
+                        this.getFriends();
                     })
                     .catch(() => this.$emit('setSnackbar', {
                         message: 'User cannot be removed!',
                         operationType: 'error',
                     }));
+            },
+
+            getFriends() {
+                this.$apollo.query({
+                    query: GET_PERSONS_QUERY,
+                    variables: {
+                        accessToken: getAccessToken(),
+                        excludeGroupId: this.groupId,
+                    },
+                    fetchPolicy: 'no-cache',
+                })
+                    .then(({ data: { myFriends } }) => this.friends = myFriends);
             },
         },
     };
