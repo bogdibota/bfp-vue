@@ -5,55 +5,53 @@
                 <Header :headerTitle="group.name"/>
 
                 <MakeMagic :groupId="group.id"/>
-                <section title="Group information">
-                    <v-subheader><h3>Group information</h3></v-subheader>
-                    <v-divider></v-divider>
-                    <GroupInformation :groupOwner="group.owner"/>
-                </section>
+                <v-expansion-panel v-model="panel" expand>
+                    <v-expansion-panel-content>
+                        <div slot="header"><h3>Group information</h3></div>
+                        <GroupInformation :groupOwner="group.owner"/>
+                    </v-expansion-panel-content>
 
-                <section title="People">
-                    <v-subheader><h3>People</h3></v-subheader>
-                    <v-divider></v-divider>
-                    <FriendsItemsBox
-                            :items="group.users"
-                            :ownerId="group.owner.id"
-                            :groupId="groupId"
-                            @setSnackbar="setSnackAttributes($event)"
-                    />
-                </section>
+                    <v-expansion-panel-content>
+                        <div slot="header"><h3>People</h3></div>
+                        <FriendsItemsBox
+                                :items="group.users"
+                                :ownerId="group.owner.id"
+                                :groupId="groupId"
+                                @setSnackbar="setSnackAttributes($event)"
+                        />
+                    </v-expansion-panel-content>
 
-                <section title="Expenses">
-                    <v-subheader><h3>Expenses</h3></v-subheader>
-                    <v-divider></v-divider>
-                    <ExpenseItemsBox
-                            :items="group.expenses"
-                            :ownerId="group.owner.id"
-                            :groupId="groupId"
-                            :membersOfGroup="group.users"
-                            @setSnackbar="setSnackAttributes($event)"
-                    />
-                </section>
+                    <v-expansion-panel-content>
+                        <div slot="header"><h3>Expenses</h3></div>
+                        <ExpenseItemsBox
+                                :items="group.expenses"
+                                :ownerId="group.owner.id"
+                                :groupId="groupId"
+                                :membersOfGroup="group.users"
+                                @setSnackbar="setSnackAttributes($event)"
+                        />
+                    </v-expansion-panel-content>
 
-                <section title="Transactions">
-                    <v-subheader><h3>Transactions</h3></v-subheader>
+                    <v-expansion-panel-content>
+                        <div slot="header"><h3>Transactions</h3></div>
+                        <TransactionItemsBox
+                                :items="group.transactions"
+                                :groupId="groupId"
+                                :ownerId="group.owner.id"
+                                :membersOfGroup="group.users"
+                                @setSnackbar="setSnackAttributes($event)"
+                        />
+                    </v-expansion-panel-content>
                     <v-divider></v-divider>
-                    <TransactionItemsBox
-                            :items="group.transactions"
-                            :groupId="groupId"
-                            :ownerId="group.owner.id"
-                            :membersOfGroup="group.users"
-                            @setSnackbar="setSnackAttributes($event)"
-                    />
-                </section>
+                    <v-expansion-panel-content v-if="isAdmin()">
+                        <div slot="header"><h3>Administrator operations</h3></div>
+                        <AdminSection :groupId="groupId"
+                                      :oldGroupName="group.name"
+                                      @setSnackbar="setSnackAttributes($event)"
+                        />
+                    </v-expansion-panel-content>
+                </v-expansion-panel>
 
-                <section v-if="isAdmin()" title="Administrator">
-                    <v-subheader><h3>Administrator operations</h3></v-subheader>
-                    <v-divider/>
-                    <AdminSection :groupId="groupId"
-                                  :oldGroupName="group.name"
-                                  @setSnackbar="setSnackAttributes($event)"
-                    />
-                </section>
 
                 <v-snackbar
                         v-model="snackbar"
@@ -106,7 +104,16 @@
                 snackMessage: '',
                 snackOperation: '',
                 snackbar: false,
+                panel: [],
             };
+        },
+        mounted() {
+            if (window.innerWidth < 425) {
+                this.panel = [true, false, false, false];
+            }
+            else {
+                this.panel = [true, true, true, true];
+            }
         },
         apollo: {
             group: {
