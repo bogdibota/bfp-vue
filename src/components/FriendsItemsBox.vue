@@ -1,5 +1,6 @@
 <template>
-    <div>
+
+    <v-container>
         <v-content>
             <ItemsBox type="User"
                       :items="items"
@@ -16,7 +17,7 @@
                 </template>
             </ItemsBox>
         </v-content>
-    </div>
+    </v-container>
 </template>
 
 <script>
@@ -38,8 +39,11 @@
         apollo: {
             friends: {
                 query: GET_PERSONS_QUERY,
-                variables: {
-                    accessToken: getAccessToken(),
+                variables() {
+                    return {
+                        accessToken: getAccessToken(),
+                        excludeGroupId: this.groupId,
+                    };
                 },
                 update: ({ myFriends }) => myFriends,
             },
@@ -65,6 +69,7 @@
                                 operationType: 'success',
                             });
 
+                            this.getFriends();
                             this.success += 1;
                         })
                         .catch(() => {
@@ -72,8 +77,6 @@
                                 message: 'User cannot be added!',
                                 operationType: 'error',
                             });
-
-                            this.success = 0;
                         });
                 });
             },
@@ -92,11 +95,21 @@
                             message: 'User was removed successfully!',
                             operationType: 'success',
                         });
+
+                        this.getFriends();
                     })
                     .catch(() => this.$emit('setSnackbar', {
                         message: 'User cannot be removed!',
                         operationType: 'error',
                     }));
+            },
+
+            getFriends() {
+                this.$apollo.queries.friends.fetchMore({
+                    updateQuery: (previousResult, { fetchMoreResult }) => {
+                        this.friends = fetchMoreResult.myFriends;
+                    },
+                });
             },
         },
     };
