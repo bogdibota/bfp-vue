@@ -69,7 +69,12 @@
                                 operationType: 'success',
                             });
 
-                            this.getFriends();
+                            this.$apollo.queries.friends.fetchMore({
+                                updateQuery: (previousResult, { fetchMoreResult }) => {
+                                    this.friends = fetchMoreResult.myFriends;
+                                }
+                            });
+
                             this.success += 1;
                         })
                         .catch(() => {
@@ -95,7 +100,12 @@
                             message: 'User was removed successfully!',
                             operationType: 'success',
                         });
-                        this.getFriends();
+
+                        this.$apollo.queries.friends.fetchMore({
+                            updateQuery: (previousResult, { fetchMoreResult }) => {
+                                this.friends = fetchMoreResult.myFriends;
+                            }
+                        });
                     })
                     .catch(() => this.$emit('setSnackbar', {
                         message: 'User cannot be removed!',
@@ -103,17 +113,6 @@
                     }));
             },
 
-            getFriends() {
-                this.$apollo.query({
-                    query: GET_PERSONS_QUERY,
-                    variables: {
-                        accessToken: getAccessToken(),
-                        excludeGroupId: this.groupId,
-                    },
-                    fetchPolicy: 'no-cache',
-                })
-                    .then(({ data: { myFriends } }) => this.friends = myFriends);
-            },
         },
     };
 </script>
