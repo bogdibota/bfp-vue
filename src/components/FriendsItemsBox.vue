@@ -69,12 +69,7 @@
                                 operationType: 'success',
                             });
 
-                            this.$apollo.queries.friends.fetchMore({
-                                updateQuery: (previousResult, { fetchMoreResult }) => {
-                                    this.friends = fetchMoreResult.myFriends;
-                                }
-                            });
-
+                            this.getFriends();
                             this.success += 1;
                         })
                         .catch(() => {
@@ -101,11 +96,7 @@
                             operationType: 'success',
                         });
 
-                        this.$apollo.queries.friends.fetchMore({
-                            updateQuery: (previousResult, { fetchMoreResult }) => {
-                                this.friends = fetchMoreResult.myFriends;
-                            }
-                        });
+                        this.getFriends();
                     })
                     .catch(() => this.$emit('setSnackbar', {
                         message: 'User cannot be removed!',
@@ -113,6 +104,13 @@
                     }));
             },
 
+            getFriends() {
+                this.$apollo.queries.friends.fetchMore({
+                    updateQuery: (previousResult, { fetchMoreResult }) => {
+                        this.friends = fetchMoreResult.myFriends;
+                    },
+                });
+            },
         },
     };
 </script>
